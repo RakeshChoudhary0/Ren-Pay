@@ -15,3 +15,11 @@ export interface User {
   password_hash: string;
   created_at: Date;
 }
+
+export interface user_refresh_tokens {
+  id: string;
+  user_id: number;
+  token: string;
+  created_at: Date;
+  expires_at: Date;
+}
