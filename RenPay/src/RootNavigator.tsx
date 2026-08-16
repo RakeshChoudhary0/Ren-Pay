@@ -19,8 +19,9 @@ const RootNavigator = () => {
           animation: 'slide_from_right',
         }}
       >
-        <Stack.Screen name="AuthPage" component={GoogleOAuth} />
         <Stack.Screen name="Home" component={HomePage} />
+
+        <Stack.Screen name="AuthPage" component={GoogleOAuth} />
         <Stack.Screen
           name="TermsAndConditions"
           component={TermsAndConditions}

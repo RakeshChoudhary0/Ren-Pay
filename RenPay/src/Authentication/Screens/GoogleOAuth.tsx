@@ -10,6 +10,7 @@ import {
 import { ColorInterface, COLORS } from '../../Extras/Constants/colors';
 import { s, vs } from 'react-native-size-matters';
 import GoogleLoginButton from '../Components/GoogleLoginButton';
+import CircularDesign from '../Components/CircularDesign';
 
 const GoogleOAuth = ({ navigation }: { navigation: any }) => {
   const styles = getStyles(COLORS);
@@ -20,6 +21,9 @@ const GoogleOAuth = ({ navigation }: { navigation: any }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.DecorationContainer}>
+        <CircularDesign />
+      </View>
       <View>
         <Text style={styles.centerText}>REN</Text>
         <Text style={styles.centerDiscriptionText}>
@@ -38,7 +42,7 @@ const GoogleOAuth = ({ navigation }: { navigation: any }) => {
             <Text style={styles.termsText}>Terms & Conditions</Text>
           </TouchableOpacity>
         </View>
-      </View> 
+      </View>
     </View>
   );
 };
@@ -52,6 +56,11 @@ const getStyles = (COLORS: ColorInterface) => {
       backgroundColor: COLORS.Black,
     },
 
+    DecorationContainer: {
+      position: 'absolute',
+      top: -150,
+      right: 220,
+    },
     centerText: {
       color: COLORS.LevenderGrey,
       fontSize: s(30),

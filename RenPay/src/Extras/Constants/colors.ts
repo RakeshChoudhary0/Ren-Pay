@@ -8,6 +8,7 @@ export interface ColorInterface {
 
   PrimaryBorder: string;
   TextSecondary: string;
+  WhiteSmoke: string;
 }
 
 export const COLORS: ColorInterface = {
@@ -20,4 +21,5 @@ export const COLORS: ColorInterface = {
 
   PrimaryBorder: '#959bb5ff',
   TextSecondary: '#313339ff',
+  WhiteSmoke: '#d9daeaff',
 };
