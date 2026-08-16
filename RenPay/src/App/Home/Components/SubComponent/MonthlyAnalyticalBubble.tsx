@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   innerContainer: {
     ...StyleSheet.absoluteFill,
     backgroundColor: COLORS.Green,
-    margin: ms(4),
+    margin: ms(3),
     borderRadius: ms(100),
     justifyContent: 'center',
     alignItems: 'center',

@@ -5,6 +5,7 @@ import { ms } from 'react-native-size-matters';
 import UpperCard from '../Components/UpperCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MiddleSection from '../Components/MiddleSection';
+import BottomSection from '../Components/BottomSection';
 
 const HomePage = () => {
   return (
@@ -17,7 +18,9 @@ const HomePage = () => {
       <View style={styles.container2}>
         <MiddleSection />
       </View>
-      <View style={styles.container3}></View>
+      <View style={styles.container3}>
+        <BottomSection />
+      </View>
     </View>
   );
 };
@@ -37,16 +40,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   container2: {
-    height: ms(120),
+    height: ms(110),
   },
   container3: {
     backgroundColor: COLORS.WhiteSmoke,
     flex: 1,
-    minHeight: ms(500),
     borderRadius: ms(20),
     width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
