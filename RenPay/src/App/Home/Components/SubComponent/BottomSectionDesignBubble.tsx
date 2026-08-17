@@ -13,8 +13,8 @@ const BottomSectionDesignBubble = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: ms(80),
-    height: ms(33),
+    width: ms(80, 0.4),
+    height: ms(33, 0.2),
     backgroundColor: COLORS.Black,
     borderBottomLeftRadius: ms(50),
     borderBottomRightRadius: ms(50),
@@ -30,3 +30,4 @@ const styles = StyleSheet.create({
 });
 
 export default BottomSectionDesignBubble;
+[];

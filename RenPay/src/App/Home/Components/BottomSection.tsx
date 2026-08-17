@@ -1,19 +1,28 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import BottomSectionDesignBubble from './SubComponent/BottomSectionDesignBubble';
 import { ms } from 'react-native-size-matters';
+import SendAgainCard from './SubComponent/SendAgainCard';
 
 const BottomSection = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.designBubble}>
         <BottomSectionDesignBubble />
+      </View>
+      <View style={styles.SendAndIncomeContainer}>
+        <SendAgainCard />
+        
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: ms(17),
+  },
   designBubble: {
     zIndex: 100,
     position: 'relative',
@@ -22,6 +31,7 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: 'center',
   },
+  SendAndIncomeContainer: {},
 });
 
 export default BottomSection;

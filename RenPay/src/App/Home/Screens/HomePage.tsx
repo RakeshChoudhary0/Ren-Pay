@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { COLORS } from '../../../Extras/Constants/colors';
-import { ms } from 'react-native-size-matters';
+import { ms, s, vs } from 'react-native-size-matters';
 import UpperCard from '../Components/UpperCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MiddleSection from '../Components/MiddleSection';
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   container1: {
     backgroundColor: COLORS.LevenderGrey,
-    height: ms(280),
+    height: ms(300, 0.2),
     borderRadius: ms(20),
     width: '100%',
   },

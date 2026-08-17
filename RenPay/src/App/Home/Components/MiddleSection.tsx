@@ -23,11 +23,14 @@ const MiddleSection = () => {
             color={COLORS.LevenderGrey}
           />
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.8} style={styles.Button}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={[styles.Button, { backgroundColor: COLORS.LevenderGrey }]}
+        >
           <MaterialIcon
             name="qr-code-scanner"
             size={ms(23)}
-            color={COLORS.LevenderGrey}
+            color={COLORS.Gray}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -88,7 +91,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: ms(10),
-    width: '40%',
+    width: '39%',
     paddingHorizontal: ms(10),
   },
 });
