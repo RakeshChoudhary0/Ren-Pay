@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import GenerateJWT from "../../Helpers/GenerateJWT.js";
 import { OAuth2Client } from "google-auth-library";
 import envConfig from "../../Config/env.config.js";
+import bcrypt from "bcryptjs";
 
 const client = new OAuth2Client(envConfig.GOOGLE_CLIENT_ID);
 
@@ -46,7 +47,7 @@ const useGoogleSignin = async (req, res) => {
     }
 
     // 1. Find by Google ID
-    let query = `SELECT id, email, name, avatar FROM ren_users WHERE google_id = $1`;
+    let query = `SELECT id, email, name, avatar , mpin FROM ren_users WHERE google_id = $1`;
     let result = await db.query(query, [googleId]);
     let user;
 
@@ -62,7 +63,7 @@ const useGoogleSignin = async (req, res) => {
       }
     } else {
       // 2. Find by Email (Account Linking)
-      query = `SELECT id, email, name, avatar FROM ren_users WHERE email = $1`;
+      query = `SELECT id, email, name, avatar , mpin FROM ren_users WHERE email = $1`;
       result = await db.query(query, [email]);
 
       if (result.rows.length > 0) {
@@ -77,7 +78,7 @@ const useGoogleSignin = async (req, res) => {
         const newUserQuery = `
           INSERT INTO ren_users (email, name, google_id, avatar)
           VALUES ($1, $2, $3, $4)
-          RETURNING id, email, name, avatar
+          RETURNING id, email, name, avatar , mpin
         `;
         const newUserResult = await db.query(newUserQuery, [
           email,
@@ -124,7 +125,7 @@ const useGetMe = async (req, res) => {
     const userId = req.user.user_id;
 
     const result = await db.query(
-      `SELECT id, email, name, avatar FROM ren_users WHERE id = $1`,
+      `SELECT id, email, name, avatar , mpin FROM ren_users WHERE id = $1`,
       [userId],
     );
 
@@ -132,9 +133,11 @@ const useGetMe = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const user = result.rows[0];
+
     return res.status(200).json({
       message: "User profile fetched successfully",
-      user: result.rows[0],
+      data: user,
     });
   } catch (error) {
     console.error("GetMe error:", error);
@@ -205,4 +208,37 @@ const useLogOutController = async (req, res) => {
   }
 };
 
-export { useLogOutController, useGetMe, useRefreshToken, useGoogleSignin };
+const useSetMpin = async (req, res) => {
+  try {
+    const userId = req.user.user_id;
+    const { mpin } = req.body;
+
+    if (!mpin) {
+      return res.status(400).json({ message: "MPIN is required" });
+    }
+
+    const hashed_mpin = await bcrypt.hash(mpin, 10);
+
+    const result = await db.query(
+      `UPDATE ren_users SET mpin = $1, updated_at = NOW() WHERE id = $2`,
+      [hashed_mpin, userId],
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ message: "MPIN set successfully" });
+  } catch (error) {
+    console.error("Set MPIN error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export {
+  useLogOutController,
+  useGetMe,
+  useRefreshToken,
+  useGoogleSignin,
+  useSetMpin,
+};

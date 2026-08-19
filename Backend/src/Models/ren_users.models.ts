@@ -12,6 +12,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  mpin: string;
   google_id: string;
   created_at: Date;
 }
