@@ -55,8 +55,8 @@ const SendAgainCard = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '48%',
-    gap: ms(10),
+    width: '45%',
+    gap: ms(7),
   },
 
   TextHeader: {
@@ -70,13 +70,13 @@ const styles = StyleSheet.create({
   profileContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: ms(10),
+    gap: ms(6),
   },
 
   avatarWrapper: {
     padding: ms(10),
-    borderRadius: ms(16),
-    backgroundColor: `${COLORS.White}70`,
+    borderRadius: ms(12),
+    backgroundColor: `${COLORS.White}60`,
     alignItems: 'center',
     justifyContent: 'center',
   },

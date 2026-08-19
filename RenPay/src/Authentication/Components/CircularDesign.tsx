@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { COLORS } from '../../Extras/Constants/colors';
+import { ms } from 'react-native-size-matters';
 
 const CircularDesign = () => {
   return (
@@ -17,10 +18,10 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   outerRing: {
-    width: 320,
-    height: 320,
-    borderRadius: 160,
-    borderWidth: 1.5,
+    width: ms(320),
+    height: ms(320),
+    borderRadius: ms(160),
+    borderWidth: ms(1.5),
     borderColor: `${COLORS.LevenderGrey}11`, // 20% opacity lavender border
     backgroundColor: `${COLORS.Gray}10`, // Subtle backdrop fill
     justifyContent: 'center',

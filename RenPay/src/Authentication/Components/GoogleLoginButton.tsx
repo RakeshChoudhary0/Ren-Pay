@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { ColorInterface, COLORS } from '../../Extras/Constants/colors';
-import { s, vs } from 'react-native-size-matters';
+import { moderateScale, s, vs } from 'react-native-size-matters';
 const GOOGLE_LOGO = require('../../Extras/Assets/GOOGLE_LOGO.png');
 
 const GoogleLoginButton = ({ onPress }: { onPress: () => void }) => {
@@ -21,25 +21,25 @@ const GoogleLoginButton = ({ onPress }: { onPress: () => void }) => {
 const getStyles = (COLORS: ColorInterface) => {
   return StyleSheet.create({
     container: {
-      height: vs(45),
-      gap: 10,
-      borderRadius: 30,
+      height: moderateScale(50),
+      gap: moderateScale(10, 0.4),
+      borderRadius: moderateScale(30, 0.4),
       backgroundColor: COLORS.LevenderGrey,
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
     },
     text: {
-      fontSize: 14,
+      fontSize: moderateScale(14, 0.4),
       fontWeight: '500',
       textAlign: 'center',
       color: COLORS.Black,
-      marginRight: s(20),
+      marginRight: moderateScale(20, 0.4),
     },
     GOOGLE_IMG: {
-      marginLeft: s(6),
-      width: s(40),
-      height: s(40),
+      marginLeft: moderateScale(6),
+      width: moderateScale(40),
+      height: moderateScale(40),
     },
   });
 };

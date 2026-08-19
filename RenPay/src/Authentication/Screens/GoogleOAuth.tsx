@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import { ColorInterface, COLORS } from '../../Extras/Constants/colors';
-import { s, vs } from 'react-native-size-matters';
+import { ms, s, vs } from 'react-native-size-matters';
 import GoogleLoginButton from '../Components/GoogleLoginButton';
 import CircularDesign from '../Components/CircularDesign';
 
@@ -58,8 +58,8 @@ const getStyles = (COLORS: ColorInterface) => {
 
     DecorationContainer: {
       position: 'absolute',
-      top: -150,
-      right: 220,
+      top: ms(-150),
+      right: ms(220),
     },
     centerText: {
       color: COLORS.LevenderGrey,
@@ -75,26 +75,23 @@ const getStyles = (COLORS: ColorInterface) => {
       fontWeight: '400',
     },
     img: {
-      height: s(160),
-      width: s(150),
+      height: ms(160),
+      width: ms(150),
     },
     googleLoginButton: {
       position: 'absolute',
-      bottom: vs(20),
+      bottom: ms(20),
       width: '100%',
       alignItems: 'center',
       paddingBottom: vs(30),
     },
     TAndC: {
       flex: 1,
-      marginTop: vs(10),
-      flexDirection: 'row',
-      gap: 10,
-      alignItems: 'center',
+      marginTop: ms(10),
     },
 
     termsText: {
-      fontSize: 12,
+      fontSize: ms(12),
       fontWeight: '400',
       textAlign: 'center',
       color: COLORS.Gray,

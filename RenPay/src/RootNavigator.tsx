@@ -5,6 +5,7 @@ import GoogleOAuth from './Authentication/Screens/GoogleOAuth';
 import { NavigationContainer } from '@react-navigation/native';
 import HomePage from './App/Home/Screens/HomePage';
 import TermsAndConditions from './Authentication/Screens/TermsAndConditions';
+import PasswordValidator from './Authentication/Screens/PasswordValidator';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,9 +20,10 @@ const RootNavigator = () => {
           animation: 'slide_from_right',
         }}
       >
+        <Stack.Screen name="PasswordValidator" component={PasswordValidator} />
         <Stack.Screen name="Home" component={HomePage} />
-
         <Stack.Screen name="AuthPage" component={GoogleOAuth} />
+
         <Stack.Screen
           name="TermsAndConditions"
           component={TermsAndConditions}

@@ -11,7 +11,7 @@ const ICON = require('../../../Extras/Assets/SQUARE_DOT.png');
 
 const user = {
   name: 'Rakesh Choudhary',
-  Balance: '123',
+  Balance: '1195932',
 };
 
 const UpperCard = () => {
