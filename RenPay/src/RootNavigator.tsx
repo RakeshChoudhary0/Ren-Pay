@@ -20,8 +20,8 @@ const RootNavigator = () => {
           animation: 'slide_from_right',
         }}
       >
-        <Stack.Screen name="PasswordValidator" component={PasswordValidator} />
         <Stack.Screen name="Home" component={HomePage} />
+        <Stack.Screen name="PasswordValidator" component={PasswordValidator} />
         <Stack.Screen name="AuthPage" component={GoogleOAuth} />
 
         <Stack.Screen
