@@ -2,22 +2,21 @@ import React, { useRef, useState } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 import { ms } from 'react-native-size-matters';
 import { COLORS } from '../../Extras/Constants/colors';
-import { NumericPad } from '../Components/NumericPad';
 import { PinDisplay } from '../Components/PinDisplay';
+import { NumericPad } from '../Components/NumericPad';
 
 const PIN_LENGTH = 6;
-const Password = '241977';
 
-const PasswordValidator = ({ navigation }: { navigation: any }) => {
+export const MpinRegisterPage = ({ navigation }: { navigation: any }) => {
+  const [step, setStep] = useState<'create' | 'confirm'>('create');
+  const [firstPin, setFirstPin] = useState<string>('');
   const [pin, setPin] = useState<number[]>([]);
   const [invalidIndicator, setInvalidIndicator] = useState(false);
 
-  // Animated Wrong Indicator
   const shakeAnimation = useRef(new Animated.Value(0)).current;
 
   const triggerShake = () => {
     shakeAnimation.setValue(0);
-
     Animated.sequence([
       Animated.timing(shakeAnimation, {
         toValue: 10,
@@ -25,17 +24,12 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
         useNativeDriver: true,
       }),
       Animated.timing(shakeAnimation, {
-        toValue: -5,
+        toValue: -10,
         duration: 50,
         useNativeDriver: true,
       }),
       Animated.timing(shakeAnimation, {
         toValue: 10,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -5,
         duration: 50,
         useNativeDriver: true,
       }),
@@ -50,24 +44,39 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
   const handlePress = (val: any) => {
     if (val === 'backspace') {
       setPin(prev => prev.slice(0, -1));
-    } else if (pin.length < PIN_LENGTH) {
-      const newPin = [...pin, val];
-      setPin(newPin);
+      return;
+    }
 
-      if (newPin.length === PIN_LENGTH) {
-        const TYPED_PIN = newPin.join('');
-        if (TYPED_PIN === Password) {
-          console.log('The PIN is correct');
-          navigation.navigate('Home');
-          setPin([]);
-        } else {
-          setInvalidIndicator(true);
-          triggerShake();
+    if (pin.length < PIN_LENGTH) {
+      const updatedPin = [...pin, val];
+      setPin(updatedPin);
+
+      if (updatedPin.length === PIN_LENGTH) {
+        const enteredPinString = updatedPin.join('');
+
+        if (step === 'create') {
+          // Transition to Confirmation step
+
           setTimeout(() => {
+            setFirstPin(enteredPinString);
             setPin([]);
-            console.log('Password was incorrect');
-            setInvalidIndicator(false);
-          }, 200);
+            setStep('confirm');
+          }, 400);
+        } else {
+          // Verify matching MPINs
+          if (enteredPinString === firstPin) {
+            console.log('MPIN Registered Successfully!');
+
+            navigation.navigate('Home');
+          } else {
+            // Mismatch handling
+            setInvalidIndicator(true);
+            triggerShake();
+            setTimeout(() => {
+              setPin([]);
+              setInvalidIndicator(false);
+            }, 300);
+          }
         }
       }
     }
@@ -76,10 +85,9 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
   return (
     <View style={styles.container}>
       <View>
-        <View style={styles.textInputWrapper}>
-          <Text style={styles.mpinHeading}>Enter MPIN</Text>
-        </View>
-
+        <Text style={styles.mpinHeading}>
+          {step === 'create' ? 'Create New MPIN' : 'Confirm Your MPIN'}
+        </Text>
         <PinDisplay
           pinLength={PIN_LENGTH}
           pinCount={pin.length}
@@ -102,15 +110,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.Black,
     gap: ms(40),
   },
-  textInputWrapper: {
-    marginBottom: ms(50),
-  },
   mpinHeading: {
     fontSize: ms(24),
     fontWeight: '700',
     color: COLORS.WhiteSmoke,
     textAlign: 'center',
+    marginBottom: ms(50),
   },
 });
-
-export default PasswordValidator;

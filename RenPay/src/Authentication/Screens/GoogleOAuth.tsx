@@ -11,12 +11,25 @@ import { ColorInterface, COLORS } from '../../Extras/Constants/colors';
 import { ms, s, vs } from 'react-native-size-matters';
 import GoogleLoginButton from '../Components/GoogleLoginButton';
 import CircularDesign from '../Components/CircularDesign';
+import useAuth from '../../Extras/Context/AuthContext';
 
 const GoogleOAuth = ({ navigation }: { navigation: any }) => {
-  const styles = getStyles(COLORS);
+  const { googleAuthentication } = useAuth();
 
-  const HandleGoogleLogin = () => {
-    navigation.navigate('Home');
+  const styles = getStyles(COLORS);
+  const HandleGoogleLogin = async () => {
+    try {
+      const res = await googleAuthentication();
+      const userMpin = res.data.data.mpin;
+
+      if (userMpin == '' || userMpin == null) {
+        navigation.navigate('MpinRegistration');
+      } else {
+        navigation.navigate('PasswordValidator');
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
   };
 
   return (

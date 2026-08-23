@@ -6,11 +6,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import HomePage from './App/Home/Screens/HomePage';
 import TermsAndConditions from './Authentication/Screens/TermsAndConditions';
 import PasswordValidator from './Authentication/Screens/PasswordValidator';
+import { MpinRegisterPage } from './Authentication/Screens/MpinRegisterPage';
+import useAuth from './Extras/Context/AuthContext';
 
 const Stack = createNativeStackNavigator();
 
 const RootNavigator = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const { user, authenticated } = useAuth();
 
   return (
     <NavigationContainer>
@@ -20,14 +22,35 @@ const RootNavigator = () => {
           animation: 'slide_from_right',
         }}
       >
-        <Stack.Screen name="Home" component={HomePage} />
-        <Stack.Screen name="PasswordValidator" component={PasswordValidator} />
-        <Stack.Screen name="AuthPage" component={GoogleOAuth} />
+        {user ? (
+          <>
+            {user.mpin == null ||
+              user.mpin == undefined ||
+              (user.mpin == '' && (
+                <Stack.Screen
+                  name="MpinRegistration"
+                  component={MpinRegisterPage}
+                />
+              ))}
 
-        <Stack.Screen
-          name="TermsAndConditions"
-          component={TermsAndConditions}
-        />
+            {authenticated ? (
+              <Stack.Screen name="Home" component={HomePage} />
+            ) : (
+              <Stack.Screen
+                name="PasswordValidator"
+                component={PasswordValidator}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="AuthPage" component={GoogleOAuth} />
+            <Stack.Screen
+              name="TermsAndConditions"
+              component={TermsAndConditions}
+            />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

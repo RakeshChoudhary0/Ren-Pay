@@ -10,6 +10,20 @@
 	<string>RenPay</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+
+
+<key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.153552764572-c0rnolcuoi6hqbqmbnpnuk0f5b04l4mv</string>
+            </array>
+        </dict>
+    </array>
+
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -56,7 +70,6 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-
 	<key>UIAppFonts</key>
 	<array>
 	<string>AntDesign.ttf</string>

@@ -25,7 +25,7 @@ transporter.verify((error, success) => {
 const sendEmail = async (to, subject, text, html) => {
   try {
     const info = await transporter.sendMail({
-      from: `Ankur`, // sender address
+      from: `RENPAY`, // sender address
       to, // list of receivers
       subject, // Subject line
       text, // plain text body

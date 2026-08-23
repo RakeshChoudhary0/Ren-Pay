@@ -23,6 +23,8 @@ target 'RenPay' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  use_modular_headers!
+
   post_install do |installer|
     react_native_post_install(
       installer,
