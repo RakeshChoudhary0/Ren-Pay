@@ -5,6 +5,7 @@ import {
   useRefreshToken,
   useGoogleSignin,
   useSetMpin,
+  verifyMpin,
 } from "../Features/Auth/auth.controller.js";
 import { authMiddleware } from "../Middlewares/AuthMiddleWare.js";
 
@@ -15,5 +16,6 @@ router.post("/set-mpin", authMiddleware, useSetMpin);
 router.post("/logout", useLogOutController);
 router.get("/me", authMiddleware, useGetMe);
 router.post("/refresh-token", useRefreshToken);
+router.post("/verify-mpin", authMiddleware, verifyMpin);
 
 export default router;

@@ -110,8 +110,8 @@ const useGoogleSignin = async (req, res) => {
 
     return res.status(200).json({
       message: "Authentication successful",
-      access_token: accessToken,
-      refresh_token: refreshToken,
+      accessToken,
+      refreshToken,
       data: user,
     });
   } catch (error) {
@@ -130,7 +130,7 @@ const useGetMe = async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(401).json({ message: "User not found" });
     }
 
     const user = result.rows[0];
@@ -141,7 +141,7 @@ const useGetMe = async (req, res) => {
     });
   } catch (error) {
     console.error("GetMe error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(401).json({ message: "Internal server error" });
   }
 };
 
@@ -219,19 +219,91 @@ const useSetMpin = async (req, res) => {
 
     const hashed_mpin = await bcrypt.hash(mpin, 10);
 
+    const payload = req.user;
+
+    const accessToken = GenerateJWT(
+      {
+        user_id: payload?.user_id,
+        email: payload?.email,
+        avatar: payload?.avatar,
+      },
+      "15m",
+    );
+
     const result = await db.query(
-      `UPDATE ren_users SET mpin = $1, updated_at = NOW() WHERE id = $2`,
+      `UPDATE ren_users SET mpin = $1, updated_at = NOW() WHERE id = $2 
+      RETURNING id, email, name, avatar , mpin`,
       [hashed_mpin, userId],
     );
 
-    if (result.rowCount === 0) {
-      return res.status(404).json({ message: "User not found" });
+    if (result.rows === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
-    return res.status(200).json({ message: "MPIN set successfully" });
+    const user = result.rows[0];
+    return res.status(200).json({
+      success: true,
+      message: "MPIN set successfully",
+      data: user,
+      accessToken,
+    });
   } catch (error) {
     console.error("Set MPIN error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
+const verifyMpin = async (req, res) => {
+  try {
+    const id = req.user?.user_id;
+    const { mpin } = req.body;
+
+    if (!id || !mpin) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID or MPIN is missing",
+      });
+    }
+    const query = `SELECT id, email, avatar, mpin FROM ren_users WHERE id = $1`;
+    const result = await db.query(query, [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    const user = result.rows[0];
+    const isMatch = await bcrypt.compare(mpin, user.mpin);
+    if (!isMatch) {
+      return res.status(200).json({
+        success: false,
+        message: "Incorrect MPIN",
+      });
+    }
+    const accessToken = GenerateJWT(
+      {
+        user_id: user.id,
+        email: user.email,
+        avatar: user.avatar,
+      },
+      "15m",
+    );
+    console.log("The PAsssword was Matched");
+    return res.status(200).json({
+      success: true,
+      message: "Pin verified successfully",
+      accessToken,
+    });
+  } catch (error) {
+    console.error("MPIN Verification error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
@@ -241,4 +313,5 @@ export {
   useRefreshToken,
   useGoogleSignin,
   useSetMpin,
+  verifyMpin,
 };
