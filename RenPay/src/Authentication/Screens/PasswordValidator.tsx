@@ -4,13 +4,15 @@ import { ms } from 'react-native-size-matters';
 import { COLORS } from '../../Extras/Constants/colors';
 import { NumericPad } from '../Components/NumericPad';
 import { PinDisplay } from '../Components/PinDisplay';
+import useAuth from '../../Extras/Context/AuthContext';
 
 const PIN_LENGTH = 6;
-const Password = '241977';
 
 const PasswordValidator = ({ navigation }: { navigation: any }) => {
   const [pin, setPin] = useState<number[]>([]);
   const [invalidIndicator, setInvalidIndicator] = useState(false);
+
+  const { verifyPin } = useAuth();
 
   // Animated Wrong Indicator
   const shakeAnimation = useRef(new Animated.Value(0)).current;
@@ -47,7 +49,7 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
     ]).start();
   };
 
-  const handlePress = (val: any) => {
+  const handlePress = async (val: any) => {
     if (val === 'backspace') {
       setPin(prev => prev.slice(0, -1));
     } else if (pin.length < PIN_LENGTH) {
@@ -56,19 +58,21 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
 
       if (newPin.length === PIN_LENGTH) {
         const TYPED_PIN = newPin.join('');
-        if (TYPED_PIN === Password) {
-          console.log('The PIN is correct');
-          navigation.navigate('Home');
-          setPin([]);
-        } else {
-          setInvalidIndicator(true);
-          triggerShake();
-          setTimeout(() => {
-            setPin([]);
-            console.log('Password was incorrect');
-            setInvalidIndicator(false);
-          }, 200);
-        }
+
+        try {
+          const res = await verifyPin(TYPED_PIN);
+          if (res.data.success) {
+            console.log('The PIN is correct');
+          } else if (!res.data.success) {
+            setInvalidIndicator(true);
+            triggerShake();
+            setTimeout(() => {
+              setPin([]);
+              console.log('Password was incorrect');
+              setInvalidIndicator(false);
+            }, 200);
+          }
+        } catch (error) {}
       }
     }
   };

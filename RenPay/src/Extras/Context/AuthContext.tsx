@@ -14,23 +14,21 @@ import {
   clearUserStorage,
 } from '../LocalStorage/UserStorage';
 import API from '../API/api';
-import {
-  deleteMpin,
-  deleteToken,
-  getMpin,
-  getToken,
-  saveMpin,
-  saveToken,
-} from '../LocalStorage/keyStore';
+import { deleteToken, getToken, saveToken } from '../LocalStorage/keyStore';
+import { createMMKV, MMKV } from 'react-native-mmkv';
+
+const storage = createMMKV();
+const HAS_LAUNCHED_KEY = 'has_launched_before';
 
 interface AuthContextType {
   googleAuthentication: () => Promise<any>;
   getMe: () => Promise<void>;
   logout: () => Promise<void>;
   setAuthenticated: (value: boolean) => void;
+  set_mpin: (value: string) => Promise<any>;
   authenticated: boolean;
   user: any;
-  mpin: string;
+  verifyPin: (value: string) => Promise<any>;
   loading: boolean;
 }
 
@@ -47,27 +45,13 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [authenticated, setAuthenticated] = useState<boolean>(false);
-
   const [user, setUser] = useState<any>(() => getUserMMKv());
-  const [mpin, setMpin] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
-
-  console.log(user);
-  useEffect(() => {
-    const loadCachedMpin = async () => {
-      const cachedMpin = await getMpin();
-      if (cachedMpin) {
-        setMpin(cachedMpin);
-      }
-    };
-    loadCachedMpin();
-  }, []);
 
   const logout = useCallback(async () => {
     try {
       const tokens = await getToken();
       if (tokens?.refreshToken) {
-        // Invalidate refresh token on backend
         await API.post('auth/logout', {
           refreshToken: tokens.refreshToken,
         }).catch(() => {});
@@ -75,43 +59,47 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.log('Server logout failed or network offline');
     } finally {
-      // Purge local storage regardless of network state
       await deleteToken();
-      await deleteMpin();
       clearUserStorage();
-
       setUser(null);
-      setMpin('');
+      setAuthenticated(false);
     }
   }, []);
 
   const getMe = useCallback(async () => {
     try {
-      const tokens = await getToken();
-      const cachedUser = getUserMMKv();
+      // 1. Check if this is a fresh app installation
+      const hasLaunched = storage.getBoolean(HAS_LAUNCHED_KEY);
+      if (!hasLaunched) {
+        // Clear lingering Keychain tokens from previous installations
+        await deleteToken();
+        clearUserStorage();
+        storage.set(HAS_LAUNCHED_KEY, true);
+        setUser(null);
+        setAuthenticated(false);
+        setLoading(false);
+        return;
+      }
 
+      const cachedUser = getUserMMKv();
       if (cachedUser) {
         setUser(cachedUser);
       }
 
+      const tokens = await getToken();
       if (!tokens?.accessToken) {
         setUser(null);
         setUserMMKv(null);
+        setAuthenticated(false);
         setLoading(false);
         return;
       }
 
       const res = await API.get('auth/me');
-
       if (res.status === 200 && res.data?.data) {
         const liveUserData = res.data.data;
         setUserMMKv(liveUserData);
         setUser(liveUserData);
-
-        if (liveUserData.mpin) {
-          await saveMpin(liveUserData.mpin);
-          setMpin(liveUserData.mpin);
-        }
       }
     } catch (error: any) {
       const status = error?.response?.status;
@@ -130,7 +118,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   }, [getMe]);
 
   const googleAuthentication = async () => {
-    let res;
     try {
       setLoading(true);
       await GoogleSignin.hasPlayServices();
@@ -141,26 +128,13 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         throw new Error('Google Sign-In failed: No ID Token returned');
       }
 
-      // Backend expects 'token' in req.body
+      const res = await API.post('auth/google-oauth', { token: idToken });
 
-      res = await API.post('auth/google-oauth', { token: idToken });
-
-      if (res.data?.access_token && res.data?.refresh_token) {
-        const { access_token, refresh_token, data: userData } = res.data;
-
-        // 1. Save JWTs to Keychain
-        await saveToken(access_token, refresh_token);
-
-        // 2. Cache user profile in MMKV & State
+      if (res.data?.accessToken && res.data?.refreshToken) {
+        const { accessToken, refreshToken, data: userData } = res.data;
+        await saveToken(accessToken, refreshToken);
         setUserMMKv(userData);
         setUser(userData);
-
-        // 3. Save MPIN to Keychain if returned
-        if (userData?.mpin) {
-          await saveMpin(userData.mpin);
-          setMpin(userData.mpin);
-        }
-
         return res;
       } else {
         throw new Error('Authentication failed on server');
@@ -173,17 +147,49 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const set_mpin = async (mpin: string) => {
+    try {
+      const res = await API.post('auth/set-mpin', { mpin });
+      if (res.data.success) {
+        setUser(res.data.data);
+        setAuthenticated(true);
+        const tokens: any = await getToken();
+        await saveToken(res.data.accessToken, tokens?.refreshToken);
+      }
+      return res;
+    } catch (error) {
+      console.error('Error setting MPIN:', error);
+    }
+  };
+
+  const verifyPin = async (mpin: string) => {
+    try {
+      const res = await API.post('auth/verify-mpin', { mpin });
+      if (res.data.success) {
+        const tokens: any = await getToken();
+        await saveToken(res.data.accessToken, tokens?.refreshToken);
+        setAuthenticated(true);
+        return res;
+      }
+      return res;
+    } catch (error: any) {
+      console.log('Verify PIN error:', error);
+      throw new Error(error.message);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
         googleAuthentication,
         getMe,
         logout,
+        set_mpin,
         authenticated,
         setAuthenticated,
         user,
-        mpin,
         loading,
+        verifyPin,
       }}
     >
       {children}

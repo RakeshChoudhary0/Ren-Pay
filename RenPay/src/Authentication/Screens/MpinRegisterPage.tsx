@@ -4,16 +4,18 @@ import { ms } from 'react-native-size-matters';
 import { COLORS } from '../../Extras/Constants/colors';
 import { PinDisplay } from '../Components/PinDisplay';
 import { NumericPad } from '../Components/NumericPad';
+import useAuth from '../../Extras/Context/AuthContext';
 
 const PIN_LENGTH = 6;
 
-export const MpinRegisterPage = ({ navigation }: { navigation: any }) => {
+export const MpinRegisterPage = () => {
   const [step, setStep] = useState<'create' | 'confirm'>('create');
   const [firstPin, setFirstPin] = useState<string>('');
   const [pin, setPin] = useState<number[]>([]);
   const [invalidIndicator, setInvalidIndicator] = useState(false);
-
   const shakeAnimation = useRef(new Animated.Value(0)).current;
+
+  const { set_mpin } = useAuth();
 
   const triggerShake = () => {
     shakeAnimation.setValue(0);
@@ -41,7 +43,7 @@ export const MpinRegisterPage = ({ navigation }: { navigation: any }) => {
     ]).start();
   };
 
-  const handlePress = (val: any) => {
+  const handlePress = async (val: any) => {
     if (val === 'backspace') {
       setPin(prev => prev.slice(0, -1));
       return;
@@ -65,9 +67,12 @@ export const MpinRegisterPage = ({ navigation }: { navigation: any }) => {
         } else {
           // Verify matching MPINs
           if (enteredPinString === firstPin) {
-            console.log('MPIN Registered Successfully!');
-
-            navigation.navigate('Home');
+            try {
+              const res = await set_mpin(enteredPinString);
+              if (res.data.success) {
+                console.log('MpinSeted SuccessFUlly');
+              }
+            } catch (error) {}
           } else {
             // Mismatch handling
             setInvalidIndicator(true);

@@ -21,12 +21,7 @@ const GoogleOAuth = ({ navigation }: { navigation: any }) => {
     try {
       const res = await googleAuthentication();
       const userMpin = res.data.data.mpin;
-
-      if (userMpin == '' || userMpin == null) {
-        navigation.navigate('MpinRegistration');
-      } else {
-        navigation.navigate('PasswordValidator');
-      }
+      console.log('the user is ', res.data.data);
     } catch (error) {
       console.log('error', error);
     }

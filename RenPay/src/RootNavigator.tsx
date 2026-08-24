@@ -24,17 +24,17 @@ const RootNavigator = () => {
       >
         {user ? (
           <>
-            {user.mpin == null ||
-              user.mpin == undefined ||
-              (user.mpin == '' && (
-                <Stack.Screen
-                  name="MpinRegistration"
-                  component={MpinRegisterPage}
-                />
-              ))}
+            {user.mpin == null && (
+              <Stack.Screen
+                name="MpinRegistration"
+                component={MpinRegisterPage}
+              />
+            )}
 
             {authenticated ? (
-              <Stack.Screen name="Home" component={HomePage} />
+              <>
+                <Stack.Screen name="Home" component={HomePage} />
+              </>
             ) : (
               <Stack.Screen
                 name="PasswordValidator"
