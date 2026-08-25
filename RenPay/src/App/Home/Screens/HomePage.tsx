@@ -1,12 +1,18 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { COLORS } from '../../../Extras/Constants/colors';
 import { ms, s, vs } from 'react-native-size-matters';
 import UpperCard from '../Components/UpperCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MiddleSection from '../Components/MiddleSection';
 import BottomSection from '../Components/BottomSection';
-
+const BackGroundImg = require('../../../Extras/Assets/BackGround.png');
 const HomePage = () => {
   return (
     <View style={styles.container}>

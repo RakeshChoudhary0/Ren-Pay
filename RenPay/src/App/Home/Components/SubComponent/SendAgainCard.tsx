@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ms } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/Feather';
 import { COLORS } from '../../../../Extras/Constants/colors';
-
+import { useNavigation } from '@react-navigation/native';
 const useData = [
   {
     id: '1',
@@ -25,6 +25,7 @@ const useData = [
 ];
 
 const SendAgainCard = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Text style={styles.TextHeader}>Send Again</Text>
@@ -32,7 +33,13 @@ const SendAgainCard = () => {
       <View style={styles.profileContainer}>
         {/* Profile items */}
         {useData.map(item => (
-          <TouchableOpacity key={item.id} style={styles.avatarWrapper}>
+          <TouchableOpacity
+            key={item.id}
+            onPress={() => {
+              navigation.navigate('Payment', { item });
+            }}
+            style={styles.avatarWrapper}
+          >
             {item.avatar ? (
               <Image source={{ uri: item.avatar }} style={styles.avatar} />
             ) : (
@@ -55,7 +62,7 @@ const SendAgainCard = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '45%',
+    width: '42%',
     gap: ms(7),
   },
 

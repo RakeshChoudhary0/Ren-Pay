@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     top: -18,
     left: 0,
     right: 0,
-    zIndex: 1,
+
     alignItems: 'center',
   },
   ButtonsContainer: {

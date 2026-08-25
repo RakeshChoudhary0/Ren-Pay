@@ -44,7 +44,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const [authenticated, setAuthenticated] = useState<boolean>(true);
   const [user, setUser] = useState<any>(() => getUserMMKv());
   const [loading, setLoading] = useState<boolean>(true);
 

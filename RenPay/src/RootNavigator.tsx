@@ -8,6 +8,7 @@ import TermsAndConditions from './Authentication/Screens/TermsAndConditions';
 import PasswordValidator from './Authentication/Screens/PasswordValidator';
 import { MpinRegisterPage } from './Authentication/Screens/MpinRegisterPage';
 import useAuth from './Extras/Context/AuthContext';
+import Payment from './App/Payment/Screens/Payment';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ const RootNavigator = () => {
             {authenticated ? (
               <>
                 <Stack.Screen name="Home" component={HomePage} />
+                <Stack.Screen name="Payment" component={Payment} />
               </>
             ) : (
               <Stack.Screen
