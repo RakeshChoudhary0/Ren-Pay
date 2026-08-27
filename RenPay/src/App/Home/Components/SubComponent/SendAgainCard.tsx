@@ -7,18 +7,21 @@ import { useNavigation } from '@react-navigation/native';
 const useData = [
   {
     id: '1',
+    name: 'Rakesh',
     avatar:
       'https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     email: 'rakeshchoudhary1154@gmail.com',
   },
   {
     id: '2',
+    name: 'Rakesh Choudhary',
     avatar:
       'https://plus.unsplash.com/premium_photo-1664541336896-b3d5f7dec9a3?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     email: 'rakeshchoudhary1154@gmail.com',
   },
   {
     id: '3',
+    name: 'Rakesh Sirvi',
     avatar: '',
     email: 'rakeshchoudhary1154@gmail.com',
   },
