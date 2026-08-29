@@ -19,7 +19,7 @@ export const COLORS: ColorInterface = {
   Green: '#6D9C41',
   Red: '#E13427',
 
-  PrimaryBorder: '#959bb5ff',
+  PrimaryBorder: '#8d91a3ff',
   TextSecondary: '#313339ff',
   WhiteSmoke: '#d9daeaff',
 };

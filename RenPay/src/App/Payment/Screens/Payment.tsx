@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../../../Extras/Constants/colors';
 import Header from '../Components/Header';
@@ -15,7 +15,7 @@ const Payment = () => {
   const { item } = route.params as { item: any };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
       <Header />
       <View style={styles.PaymentSection}>
         <PaymentSection item={item} />
@@ -31,15 +31,9 @@ const styles = StyleSheet.create({
   },
 
   PaymentSection: {
-    width: '95%',
-    marginTop: 'auto',
-    alignSelf: 'center',
-    marginBottom: ms(20),
-  },
-  text: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: COLORS.White,
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
   },
 });
 

@@ -70,6 +70,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     try {
       // 1. Check if this is a fresh app installation
       const hasLaunched = storage.getBoolean(HAS_LAUNCHED_KEY);
+
       if (!hasLaunched) {
         // Clear lingering Keychain tokens from previous installations
         await deleteToken();
@@ -84,6 +85,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       const cachedUser = getUserMMKv();
       if (cachedUser) {
         setUser(cachedUser);
+        console.log(cachedUser);
       }
 
       const tokens = await getToken();

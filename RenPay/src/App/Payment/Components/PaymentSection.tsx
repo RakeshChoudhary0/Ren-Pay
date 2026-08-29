@@ -1,21 +1,41 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { COLORS } from '../../../Extras/Constants/colors';
-import { ms } from 'react-native-size-matters';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import SendToCard from './SubComponent/SendToCard';
+import AmountSection from './SubComponent/AmountSection';
+import { ms } from 'react-native-size-matters';
+import NumberPad from './SubComponent/NumberPad';
 
-const PaymentSection = ({ item }: { item: any }) => {
+interface PaymentSectionProps {
+  item: {
+    name?: string;
+    email?: string;
+  };
+  onChangeUser?: () => void;
+}
+
+const PaymentSection = ({ item, onChangeUser }: PaymentSectionProps) => {
+  const [amount, setAmount] = useState('356.20');
+
   return (
-    <View>
-      <SendToCard item={item} />
+    <View style={styles.container}>
+      <AmountSection amount={amount} />
+
+      <SendToCard item={item} onPress={onChangeUser} />
+      <NumberPad />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  text: {
-    fontSize: ms(20),
-    color: COLORS.White,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    gap: ms(10),
+  },
+  cardContainer: {
+    flex: 1,
   },
 });
 
