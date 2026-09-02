@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import envConfig from "./env.config.js"; // Note: Add .js extension if using ES Modules
+import envConfig from "./env.config.js";
 
 const pool = new Pool({
   connectionString: envConfig.DATABASE_URL,
@@ -13,7 +13,6 @@ pool.connect((err, client, release) => {
   if (err) {
     return console.error("connecting to online database", err.stack);
   }
-
   console.log("successfully connected to online PostGres");
   release();
 });
