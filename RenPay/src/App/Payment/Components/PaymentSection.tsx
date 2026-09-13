@@ -6,22 +6,22 @@ import { ms } from 'react-native-size-matters';
 import NumberPad from './SubComponent/NumberPad';
 
 interface PaymentSectionProps {
-  item: {
+  user?: {
     name?: string;
     email?: string;
   };
   onChangeUser?: () => void;
 }
 
-const PaymentSection = ({ item, onChangeUser }: PaymentSectionProps) => {
-  const [amount, setAmount] = useState('356.20');
+const PaymentSection = ({ user, onChangeUser }: PaymentSectionProps) => {
+  const [amount, setAmount] = useState('');
+  console.log('🚀 ~ PaymentSection ~ amount:', amount);
 
   return (
     <View style={styles.container}>
       <AmountSection amount={amount} />
-
-      <SendToCard item={item} onPress={onChangeUser} />
-      <NumberPad />
+      {user && <SendToCard user={user} onChangeUser={onChangeUser} />}
+      <NumberPad amount={amount} setAmount={setAmount} />
     </View>
   );
 };

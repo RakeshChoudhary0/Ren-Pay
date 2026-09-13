@@ -12,13 +12,14 @@ const BackgroundImg = require('../../../Extras/Assets/BackGround.png');
 
 const Payment = () => {
   const route = useRoute();
-  const { item } = route.params as { item: any };
+  const { sendToUser } = route.params as { sendToUser: any };
+  console.log('🚀 ~ Payment ~ item:', sendToUser);
 
   return (
     <SafeAreaView edges={['top']} style={styles.container}>
       <Header />
       <View style={styles.PaymentSection}>
-        <PaymentSection item={item} />
+        <PaymentSection user={sendToUser} />
       </View>
     </SafeAreaView>
   );

@@ -14,7 +14,7 @@ export type RootStackParamList = {
   MpinRegistration: undefined;
   PasswordValidator: undefined;
   Home: undefined;
-  Payment: { item: UserItem };
+  Payment: { sendToUser: UserItem };
 };
 
 declare global {

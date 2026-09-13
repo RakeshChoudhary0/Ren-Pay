@@ -10,7 +10,7 @@ interface AmountSectionProps {
 
 const AmountSection = ({
   amount: externalAmount,
-  currencySymbol = '$',
+  currencySymbol = '₹',
 }: AmountSectionProps) => {
   const [internalAmount] = useState('00.00');
   const amount = externalAmount !== undefined ? externalAmount : internalAmount;
@@ -22,7 +22,7 @@ const AmountSection = ({
 
   return (
     <View style={styles.displayContainer}>
-      <Text style={styles.currencyLabel}>USD</Text>
+      <Text style={styles.currencyLabel}>INR</Text>
 
       <View style={styles.amountRow}>
         <Text style={styles.currencySymbol}>{currencySymbol}</Text>
@@ -45,17 +45,18 @@ const styles = StyleSheet.create({
     paddingBottom: ms(10),
   },
   currencyLabel: {
-    fontSize: ms(38),
+    fontSize: ms(40),
     fontWeight: '600',
-    color: 'rgba(255, 255, 255, 0.4)',
+    color: COLORS.White,
+    opacity: 0.8,
   },
   amountRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    gap: ms(4),
+    gap: ms(2),
   },
   currencySymbol: {
-    fontSize: ms(50),
+    fontSize: ms(52),
     fontWeight: '600',
     color: COLORS.White,
     marginRight: ms(2),
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     letterSpacing: -1,
   },
   decimalText: {
-    fontSize: ms(22),
+    fontSize: ms(26),
     fontWeight: '700',
     color: COLORS.White,
     opacity: 0.6,

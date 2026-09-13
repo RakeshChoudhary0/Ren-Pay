@@ -1,19 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ms } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/Entypo';
 import { COLORS } from '../../../../Extras/Constants/colors';
 
 interface NumberPadProps {
-  onKeyPress?: (key: string | number) => void;
+  amount: string;
+  setAmount: (amount: string) => void;
 }
 
-const NumberPad = ({ onKeyPress }: NumberPadProps) => {
+const NumberPad = ({ amount, setAmount }: NumberPadProps) => {
   const keys: (number | string)[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, '.', 0, 'back'];
 
   const handlePress = (key: number | string) => {
-    if (onKeyPress) {
-      onKeyPress(key);
+    if (key === 'back') {
+      setAmount(amount.slice(0, -1));
+    } else {
+      setAmount(amount + key);
     }
   };
 

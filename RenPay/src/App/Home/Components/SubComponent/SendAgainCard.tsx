@@ -35,16 +35,19 @@ const SendAgainCard = () => {
 
       <View style={styles.profileContainer}>
         {/* Profile items */}
-        {useData.map(item => (
+        {useData.map(sendToUser => (
           <TouchableOpacity
-            key={item.id}
+            key={sendToUser.id}
             onPress={() => {
-              navigation.navigate('Payment', { item });
+              navigation.navigate('Payment', { sendToUser });
             }}
             style={styles.avatarWrapper}
           >
-            {item.avatar ? (
-              <Image source={{ uri: item.avatar }} style={styles.avatar} />
+            {sendToUser.avatar ? (
+              <Image
+                source={{ uri: sendToUser.avatar }}
+                style={styles.avatar}
+              />
             ) : (
               <View style={styles.avatar}>
                 <Icon name="user" size={ms(22)} color={COLORS.Gray} />

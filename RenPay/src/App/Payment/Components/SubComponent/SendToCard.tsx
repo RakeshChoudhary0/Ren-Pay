@@ -5,28 +5,28 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { COLORS } from '../../../../Extras/Constants/colors';
 
 interface SendToCardProps {
-  item: {
+  user?: {
     name?: string;
     email?: string;
   };
-  onPress?: () => void;
+  onChangeUser?: () => void;
 }
 
-const SendToCard = ({ item, onPress }: SendToCardProps) => {
+const SendToCard = ({ user, onChangeUser }: SendToCardProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.infoWrapper}>
         <Text numberOfLines={1} style={styles.name}>
-          {item?.name}
+          {user?.name}
         </Text>
         <Text numberOfLines={1} style={styles.email}>
-          {item?.email}
+          {user?.email}
         </Text>
       </View>
 
       <TouchableOpacity
         style={styles.changeUserWrapper}
-        onPress={onPress}
+        onPress={onChangeUser}
         activeOpacity={0.7}
       >
         <Icon
@@ -41,11 +41,11 @@ const SendToCard = ({ item, onPress }: SendToCardProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: ms(65),
+    height: ms(75),
     width: '94%',
     backgroundColor: COLORS.Gray,
-    borderRadius: ms(16),
-    paddingHorizontal: ms(4),
+    borderRadius: ms(20),
+    paddingHorizontal: ms(3),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -74,9 +74,9 @@ const styles = StyleSheet.create({
     letterSpacing: -0.4,
   },
   changeUserWrapper: {
-    width: ms(58),
-    height: ms(58),
-    borderRadius: ms(16),
+    width: ms(69),
+    height: ms(69),
+    borderRadius: ms(20),
     backgroundColor: COLORS.PrimaryBorder,
     alignItems: 'center',
     justifyContent: 'center',
