@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ms } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../../Extras/Constants/colors';
+import RNHapticFeedback from 'react-native-haptic-feedback';
 
 interface NumericPadProps {
   onPress: (val: number | string) => void;
@@ -24,6 +25,16 @@ const PAD_KEYS = [
 ];
 
 export const NumericPad: React.FC<NumericPadProps> = ({ onPress }) => {
+  const options = {
+    enableVibrateFallback: true,
+    ignoreAndroidSystemSettings: false,
+  };
+
+  const HandlePress = (value: number | string) => {
+    RNHapticFeedback.trigger('impactLight', options);
+    onPress(value);
+  };
+
   return (
     <View style={styles.numpadWrapper}>
       <View style={styles.numberPad}>
@@ -37,7 +48,9 @@ export const NumericPad: React.FC<NumericPadProps> = ({ onPress }) => {
               key={item.value}
               activeOpacity={0.7}
               style={styles.numberCircle}
-              onPress={() => onPress(item.value)}
+              onPress={() => {
+                HandlePress(item.value);
+              }}
             >
               {item.type === 'backspace' ? (
                 <Icon

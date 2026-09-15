@@ -62,10 +62,10 @@ const styles = StyleSheet.create({
     marginLeft: ms(12),
   },
   name: {
-    fontSize: ms(16),
+    fontSize: ms(18),
     fontWeight: '700',
     color: COLORS.White,
-    letterSpacing: -0.4,
+    letterSpacing: 0,
   },
   email: {
     fontSize: ms(12),
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   changeUserWrapper: {
     width: ms(69),
     height: ms(69),
-    borderRadius: ms(20),
+    borderRadius: ms(18),
     backgroundColor: COLORS.PrimaryBorder,
     alignItems: 'center',
     justifyContent: 'center',

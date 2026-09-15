@@ -8,8 +8,8 @@
     "lint": "eslint .",
     "start": "react-native start --reset-cache",
     "test": "jest",
-    "pod": "cd ios && pod install && pod update && cd ..",
-    "grad": "cd android && ./gradlew clean && cd ..",
+    "ios:pod": "cd ios && pod install && pod update && cd ..",
+    "android:gradle": "cd android && ./gradlew clean && cd ..",
     "clean": "rm -rf node_modules && npm install"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
     "react": "19.2.3",
     "react-native": "0.87.0",
     "react-native-gifted-charts": "^1.4.78",
+    "react-native-haptic-feedback": "^3.0.0",
     "react-native-keychain": "^10.0.0",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-mmkv": "^4.3.2",

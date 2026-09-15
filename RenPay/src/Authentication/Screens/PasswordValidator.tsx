@@ -5,6 +5,7 @@ import { COLORS } from '../../Extras/Constants/colors';
 import { NumericPad } from '../Components/NumericPad';
 import { PinDisplay } from '../Components/PinDisplay';
 import useAuth from '../../Extras/Context/AuthContext';
+import BrandingText from '../Components/BrandingText';
 
 const PIN_LENGTH = 6;
 
@@ -12,7 +13,7 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
   const [pin, setPin] = useState<number[]>([]);
   const [invalidIndicator, setInvalidIndicator] = useState(false);
 
-  const { verifyPin } = useAuth();
+  const { verifyPin, user } = useAuth();
 
   // Animated Wrong Indicator
   const shakeAnimation = useRef(new Animated.Value(0)).current;
@@ -82,6 +83,7 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
       <View>
         <View style={styles.textInputWrapper}>
           <Text style={styles.mpinHeading}>Enter MPIN</Text>
+          <Text style={styles.mpinHeading2}>{user.name}</Text>
         </View>
 
         <PinDisplay
@@ -93,6 +95,8 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
       </View>
 
       <NumericPad onPress={handlePress} />
+
+      <BrandingText />
     </View>
   );
 };
@@ -101,7 +105,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: ms(60),
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: COLORS.Black,
     gap: ms(40),
@@ -112,6 +116,12 @@ const styles = StyleSheet.create({
   mpinHeading: {
     fontSize: ms(24),
     fontWeight: '700',
+    color: COLORS.LevenderGrey,
+    textAlign: 'center',
+  },
+  mpinHeading2: {
+    fontSize: ms(19),
+    fontWeight: '400',
     color: COLORS.WhiteSmoke,
     textAlign: 'center',
   },

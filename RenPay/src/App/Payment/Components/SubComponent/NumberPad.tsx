@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ms } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/Entypo';
 import { COLORS } from '../../../../Extras/Constants/colors';
+import RNHapticFeedback from 'react-native-haptic-feedback';
 
 interface NumberPadProps {
   amount: string;
@@ -12,7 +13,12 @@ interface NumberPadProps {
 const NumberPad = ({ amount, setAmount }: NumberPadProps) => {
   const keys: (number | string)[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, '.', 0, 'back'];
 
+  const options = {
+    enableVibrateFallback: true,
+    ignoreAndroidSystemSettings: false,
+  };
   const handlePress = (key: number | string) => {
+    RNHapticFeedback.trigger('impactLight', options);
     if (key === 'back') {
       setAmount(amount.slice(0, -1));
     } else {
@@ -22,6 +28,13 @@ const NumberPad = ({ amount, setAmount }: NumberPadProps) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.TotalBalanceWrapper}>
+        <View style={styles.TotalBalanceLeft}>
+          <Text style={styles.TotalBalanceText1}>Total Balance: </Text>
+          <Text style={styles.TotalBalanceText2}>₹12,329</Text>
+        </View>
+      </View>
+
       <View style={styles.grid}>
         {keys.map(k => {
           const isBack = k === 'back';
@@ -70,13 +83,13 @@ const styles = StyleSheet.create({
     borderRadius: ms(24),
     paddingTop: ms(30),
     paddingBottom: ms(15),
-    paddingHorizontal: ms(17),
+    paddingHorizontal: ms(16),
   },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    paddingBottom: ms(10),
+    paddingBottom: ms(11),
   },
   keyWrapper: {
     width: '33.33%',
@@ -85,8 +98,8 @@ const styles = StyleSheet.create({
     padding: ms(1),
   },
   key: {
-    width: ms(111),
-    height: ms(74),
+    width: '100%',
+    height: ms(73),
     backgroundColor: COLORS.WhiteSmoke || '#F5F5F7',
     justifyContent: 'center',
     alignItems: 'center',
@@ -107,6 +120,41 @@ const styles = StyleSheet.create({
     borderRadius: ms(35),
   },
   SendButtonContainer: {},
+
+  // Total Balance Button
+  TotalBalanceWrapper: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    top: ms(-15),
+    backgroundColor: COLORS.White,
+    borderWidth: 4,
+    borderColor: COLORS.Black,
+    paddingHorizontal: ms(12),
+    paddingVertical: ms(7),
+    borderRadius: ms(20),
+  },
+  TotalBalanceLeft: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  TotalBalanceRight: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  TotalBalanceText1: {
+    fontSize: ms(12),
+    fontWeight: '400',
+    color: COLORS.TextSecondary,
+  },
+  TotalBalanceText2: {
+    fontSize: ms(13),
+    fontWeight: '800',
+    color: COLORS.Black,
+  },
 });
 
 export default NumberPad;
