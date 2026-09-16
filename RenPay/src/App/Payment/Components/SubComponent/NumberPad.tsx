@@ -8,10 +8,13 @@ import RNHapticFeedback from 'react-native-haptic-feedback';
 interface NumberPadProps {
   amount: string;
   setAmount: (amount: string) => void;
+  balance?: string;
 }
 
-const NumberPad = ({ amount, setAmount }: NumberPadProps) => {
+const NumberPad = ({ amount, setAmount, balance }: NumberPadProps) => {
   const keys: (number | string)[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, '.', 0, 'back'];
+
+  const balanceValue = Number(balance)?.toLocaleString('en-IN');
 
   const options = {
     enableVibrateFallback: true,
@@ -31,7 +34,7 @@ const NumberPad = ({ amount, setAmount }: NumberPadProps) => {
       <View style={styles.TotalBalanceWrapper}>
         <View style={styles.TotalBalanceLeft}>
           <Text style={styles.TotalBalanceText1}>Total Balance: </Text>
-          <Text style={styles.TotalBalanceText2}>₹12,329</Text>
+          <Text style={styles.TotalBalanceText2}>{balanceValue}</Text>
         </View>
       </View>
 

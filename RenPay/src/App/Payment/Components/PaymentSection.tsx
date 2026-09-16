@@ -21,8 +21,8 @@ const PaymentSection = ({ user, onChangeUser }: PaymentSectionProps) => {
     <View style={styles.container}>
       <AmountSection amount={amount} />
       {user && <SendToCard user={user} onChangeUser={onChangeUser} />}
-      
-      <NumberPad amount={amount} setAmount={setAmount} />
+
+      <NumberPad amount={amount} balance="12349" setAmount={setAmount} />
     </View>
   );
 };
