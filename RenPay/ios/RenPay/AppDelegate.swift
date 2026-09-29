@@ -5,7 +5,6 @@ import ReactAppDependencyProvider
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-  var window: UIWindow?
 
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
@@ -21,16 +20,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     reactNativeDelegate = delegate
     reactNativeFactory = factory
 
-    window = UIWindow(frame: UIScreen.main.bounds)
-
-    factory.startReactNative(
-      withModuleName: "RenPay",
-      in: window,
-      launchOptions: launchOptions
-    )
+    // Removed UIWindow creation and factory.startReactNative here.
+    // They are now handled in SceneDelegate.swift.
 
     return true
   }
+
+  // MARK: UISceneSession Lifecycle
+
+  func application(
+      _ application: UIApplication,
+      configurationForConnecting connectingSceneSession: UISceneSession,
+      options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+      let configuration = UISceneConfiguration(
+        name: "Default Configuration",
+        sessionRole: connectingSceneSession.role
+      )
+      configuration.delegateClass = SceneDelegate.self
+      return configuration
+    }
 }
 
 class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
@@ -46,3 +55,4 @@ class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
 #endif
   }
 }
+
