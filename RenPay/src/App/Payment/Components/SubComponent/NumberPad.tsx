@@ -9,6 +9,7 @@ interface NumberPadProps {
   amount: string;
   setAmount: (amount: string) => void;
   balance?: string;
+  disable?: boolean;
 }
 
 const NumberPad = ({ amount, setAmount, balance }: NumberPadProps) => {
@@ -29,12 +30,39 @@ const NumberPad = ({ amount, setAmount, balance }: NumberPadProps) => {
     }
   };
 
+  const AmountLimitExeced = Number(amount) >= Number(balance) ? true : false;
+
+  console.log(balance, 'Amount', amount);
+
   return (
     <View style={styles.container}>
-      <View style={styles.TotalBalanceWrapper}>
+      <View
+        style={[
+          styles.TotalBalanceWrapper,
+          { backgroundColor: AmountLimitExeced ? COLORS.Red : COLORS.White },
+        ]}
+      >
         <View style={styles.TotalBalanceLeft}>
-          <Text style={styles.TotalBalanceText1}>Total Balance: </Text>
-          <Text style={styles.TotalBalanceText2}>{balanceValue}</Text>
+          <Text
+            style={[
+              styles.TotalBalanceText1,
+              {
+                color: AmountLimitExeced
+                  ? COLORS.LevenderGrey
+                  : COLORS.TextSecondary,
+              },
+            ]}
+          >
+            Total Balance:{' '}
+          </Text>
+          <Text
+            style={[
+              styles.TotalBalanceText2,
+              { color: AmountLimitExeced ? COLORS.WhiteSmoke : COLORS.Black },
+            ]}
+          >
+            {balanceValue}
+          </Text>
         </View>
       </View>
 
@@ -47,6 +75,7 @@ const NumberPad = ({ amount, setAmount, balance }: NumberPadProps) => {
               key={k}
               style={[styles.keyWrapper]}
               activeOpacity={0.6}
+              disabled={isBack ? false : AmountLimitExeced}
               onPress={() => handlePress(k)}
             >
               <View
@@ -117,11 +146,13 @@ const styles = StyleSheet.create({
     color: COLORS.Black || '#000',
     fontWeight: '600',
   },
+
   SwipeWrapper: {
     height: ms(70),
     backgroundColor: COLORS.WhiteSmoke,
     borderRadius: ms(35),
   },
+
   SendButtonContainer: {},
 
   // Total Balance Button
@@ -131,11 +162,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     top: ms(-15),
-    backgroundColor: COLORS.White,
-    borderWidth: 4,
-    borderColor: COLORS.Black,
-    paddingHorizontal: ms(12),
-    paddingVertical: ms(7),
+
+    elevation: 3,
+    shadowColor: COLORS.PrimaryBorder,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: ms(1),
+    shadowOpacity: 0.55,
+    paddingHorizontal: ms(15),
+    paddingVertical: ms(9),
     borderRadius: ms(20),
   },
   TotalBalanceLeft: {
@@ -151,12 +185,10 @@ const styles = StyleSheet.create({
   TotalBalanceText1: {
     fontSize: ms(12),
     fontWeight: '400',
-    color: COLORS.TextSecondary,
   },
   TotalBalanceText2: {
     fontSize: ms(13),
     fontWeight: '800',
-    color: COLORS.Black,
   },
 });
 

@@ -30,6 +30,7 @@ interface AuthContextType {
   user: any;
   verifyPin: (value: string) => Promise<any>;
   loading: boolean;
+  pinLoading: boolean;
 }
 
 GoogleSignin.configure({
@@ -44,9 +45,10 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const [authenticated, setAuthenticated] = useState<boolean>(true);
   const [user, setUser] = useState<any>(() => getUserMMKv());
   const [loading, setLoading] = useState<boolean>(true);
+  const [pinLoading, setPinLoading] = useState<boolean>(false);
 
   const logout = useCallback(async () => {
     try {
@@ -151,6 +153,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
   const set_mpin = async (mpin: string) => {
     try {
+      setPinLoading(true);
       const res = await API.post('auth/set-mpin', { mpin });
       if (res.data.success) {
         setUser(res.data.data);
@@ -158,25 +161,31 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         const tokens: any = await getToken();
         await saveToken(res.data.accessToken, tokens?.refreshToken);
       }
+      setPinLoading(false);
       return res;
     } catch (error) {
       console.error('Error setting MPIN:', error);
+    } finally {
+      setPinLoading(false);
     }
   };
 
   const verifyPin = async (mpin: string) => {
     try {
+      setPinLoading(true);
       const res = await API.post('auth/verify-mpin', { mpin });
       if (res.data.success) {
         const tokens: any = await getToken();
         await saveToken(res.data.accessToken, tokens?.refreshToken);
         setAuthenticated(true);
-        return res;
+        setPinLoading(false);
       }
       return res;
     } catch (error: any) {
       console.log('Verify PIN error:', error);
       throw new Error(error.message);
+    } finally {
+      setPinLoading(false);
     }
   };
 
@@ -191,6 +200,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         setAuthenticated,
         user,
         loading,
+        pinLoading,
         verifyPin,
       }}
     >

@@ -14,6 +14,7 @@ export const MpinRegisterPage = () => {
   const [pin, setPin] = useState<number[]>([]);
   const [invalidIndicator, setInvalidIndicator] = useState(false);
   const shakeAnimation = useRef(new Animated.Value(0)).current;
+  const LoadingAnimation = useRef(new Animated.Value(0)).current;
 
   const { set_mpin } = useAuth();
 
@@ -43,6 +44,37 @@ export const MpinRegisterPage = () => {
     ]).start();
   };
 
+  const triggerLoad = () => {
+    LoadingAnimation.setValue(0);
+    Animated.sequence([
+      Animated.timing(shakeAnimation, {
+        toValue: 10,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: -10,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: -10,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: -10,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]);
+  };
+
   const handlePress = async (val: any) => {
     if (val === 'backspace') {
       setPin(prev => prev.slice(0, -1));
@@ -52,7 +84,6 @@ export const MpinRegisterPage = () => {
     if (pin.length < PIN_LENGTH) {
       const updatedPin = [...pin, val];
       setPin(updatedPin);
-
       if (updatedPin.length === PIN_LENGTH) {
         const enteredPinString = updatedPin.join('');
 
@@ -98,6 +129,7 @@ export const MpinRegisterPage = () => {
           pinCount={pin.length}
           invalidIndicator={invalidIndicator}
           shakeAnimation={shakeAnimation}
+          LoadAnimation={LoadingAnimation}
         />
       </View>
 

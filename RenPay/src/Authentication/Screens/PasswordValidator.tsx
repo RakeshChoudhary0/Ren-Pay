@@ -15,12 +15,44 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
 
   const { verifyPin, user } = useAuth();
 
-  // Animated Wrong Indicator
+  //  Animated Wrong Indicator
   const shakeAnimation = useRef(new Animated.Value(0)).current;
+
+  const LoadingAnimation = useRef(new Animated.Value(0)).current;
+
+  const triggerLoad = () => {
+    LoadingAnimation.setValue(0);
+    Animated.sequence([
+      Animated.timing(shakeAnimation, {
+        toValue: 10,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: -10,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: -10,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: -10,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]);
+  };
 
   const triggerShake = () => {
     shakeAnimation.setValue(0);
-
     Animated.sequence([
       Animated.timing(shakeAnimation, {
         toValue: 10,
@@ -91,6 +123,7 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
           pinCount={pin.length}
           invalidIndicator={invalidIndicator}
           shakeAnimation={shakeAnimation}
+          LoadAnimation={LoadingAnimation}
         />
       </View>
 

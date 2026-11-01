@@ -8,6 +8,7 @@ interface PinDisplayProps {
   pinCount: number;
   invalidIndicator: boolean;
   shakeAnimation: Animated.Value;
+  LoadAnimation: Animated.Value;
 }
 
 export const PinDisplay: React.FC<PinDisplayProps> = ({
@@ -15,12 +16,18 @@ export const PinDisplay: React.FC<PinDisplayProps> = ({
   pinCount,
   invalidIndicator,
   shakeAnimation,
+  LoadAnimation,
 }) => {
   return (
     <Animated.View
       style={[
         styles.inputWrapper,
-        { transform: [{ translateX: shakeAnimation }] },
+        {
+          transform: [
+            { translateX: shakeAnimation },
+            { translateY: LoadAnimation },
+          ],
+        },
       ]}
     >
       {Array.from({ length: pinLength }).map((_, index) => {

@@ -1,5 +1,5 @@
 import { useRoute } from '@react-navigation/native';
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../../../Extras/Constants/colors';
@@ -13,13 +13,13 @@ const BackgroundImg = require('../../../Extras/Assets/BackGround.png');
 const Payment = () => {
   const route = useRoute();
   const { sendToUser } = route.params as { sendToUser: any };
-  console.log('🚀 ~ Payment ~ item:', sendToUser);
+  const [inSuficientFund, setInSuficientFund] = useState(false);
 
   return (
     <SafeAreaView edges={['top']} style={styles.container}>
       <Header />
       <View style={styles.PaymentSection}>
-        <PaymentSection user={sendToUser} />
+        <PaymentSection user={sendToUser} inSuficientFund={inSuficientFund} setInSuficientFund={setInSuficientFund} />
       </View>
     </SafeAreaView>
   );

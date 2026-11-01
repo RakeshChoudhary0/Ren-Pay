@@ -11,11 +11,12 @@ interface PaymentSectionProps {
     email?: string;
   };
   onChangeUser?: () => void;
+  inSuficientFund: boolean;
+  setInSuficientFund: (value: boolean) => void;
 }
 
 const PaymentSection = ({ user, onChangeUser }: PaymentSectionProps) => {
   const [amount, setAmount] = useState('');
-  console.log('🚀 ~ PaymentSection ~ amount:', amount);
 
   return (
     <View style={styles.container}>

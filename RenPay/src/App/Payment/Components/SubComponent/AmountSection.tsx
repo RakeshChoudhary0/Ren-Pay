@@ -18,7 +18,7 @@ const AmountSection = ({
   // Split integer and decimal parts
   const parts = amount.split('.');
   const integerPart = parts[0] || '0';
-  const decimalPart = parts[1] !== undefined ? `.${parts[1]}` : '';
+  const decimalPart = parts[1] !== undefined ? `.${parts[1]}` : '.';
 
   return (
     <View style={styles.displayContainer}>
