@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import BottomSectionDesignBubble from './SubComponent/BottomSectionDesignBubble';
 import { ms } from 'react-native-size-matters';
 import SendAgainCard from './SubComponent/SendAgainCard';
@@ -20,6 +14,7 @@ const BottomSection = () => {
       <View style={styles.designBubble}>
         <BottomSectionDesignBubble />
       </View>
+
       <View style={styles.SendAndIncomeContainer}>
         <SendAgainCard />
         <GraphCard />
@@ -31,17 +26,17 @@ const BottomSection = () => {
             <Icon name="arrow-right" size={ms(18)} color={COLORS.Black} />
           </TouchableOpacity>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.scroll}>
-            <RecentTrancationCard />
-            <RecentTrancationCard />
-            <RecentTrancationCard />
-            <RecentTrancationCard />
-            <RecentTrancationCard />
-            <RecentTrancationCard />
-            <RecentTrancationCard />
-          </View>
-        </ScrollView>
+
+        <View style={styles.scroll}>{/* List items will render here */}</View>
+        <View style={styles.emptyRecent}>
+          <Icon
+            name="clock"
+            size={ms(26)}
+            color={COLORS.Gray}
+            style={styles.emptyIcon}
+          />
+          <Text style={styles.emptyText}>No Recent Transactions</Text>
+        </View>
       </View>
     </View>
   );
@@ -51,6 +46,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: ms(12),
+    paddingBottom: ms(30),
   },
   designBubble: {
     zIndex: 100,
@@ -62,30 +58,50 @@ const styles = StyleSheet.create({
   },
   SendAndIncomeContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
+    gap: ms(10),
   },
 
   historySection: {
-    flex: 1,
-    paddingTop: ms(20),
+    marginTop: ms(20),
+    minHeight: ms(160),
   },
 
   scroll: {
-    gap: ms(6),
+    gap: ms(8),
   },
 
   HistoryHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: ms(9),
+    paddingBottom: ms(12),
     paddingHorizontal: ms(10),
   },
+
   TextHeader: {
     fontSize: ms(14),
     fontWeight: '700',
     color: COLORS.Black,
     letterSpacing: -0.4,
+  },
+  emptyRecent: {
+    paddingVertical: ms(30),
+    paddingHorizontal: ms(20),
+    backgroundColor: `${COLORS.White}60`,
+    borderRadius: ms(16),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyIcon: {
+    marginBottom: ms(8),
+    opacity: 0.6,
+  },
+  emptyText: {
+    fontSize: ms(13),
+    fontWeight: '500',
+    color: COLORS.Gray,
   },
 });
 

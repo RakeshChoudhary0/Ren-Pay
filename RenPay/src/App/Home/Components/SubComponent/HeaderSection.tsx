@@ -3,9 +3,12 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { COLORS } from '../../../../Extras/Constants/colors';
 import { ms } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MoreScreen from '../../../More/MoreScreen';
+import { useNavigation } from '@react-navigation/native';
 const ICON = require('../../../../Extras/Assets/SQUARE_DOT.png');
 
 const HeaderSection = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.HeaderContainer}>
       <View>
@@ -17,7 +20,13 @@ const HeaderSection = () => {
       </View>
 
       <View style={styles.ButtonContainer}>
-        <TouchableOpacity activeOpacity={0.4} style={styles.Button}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('More');
+          }}
+          activeOpacity={0.4}
+          style={styles.Button}
+        >
           <Image source={ICON} style={styles.IconImage} />
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.4} style={styles.Button}>

@@ -15,19 +15,25 @@ import BottomSection from '../Components/BottomSection';
 const BackGroundImg = require('../../../Extras/Assets/BackGround.png');
 const HomePage = () => {
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={false}
+      bounces={true}
+    >
       <View style={styles.container1}>
         <SafeAreaView edges={['top']} style={styles.safeArea}>
           <UpperCard />
         </SafeAreaView>
       </View>
+
       <View style={styles.container2}>
         <MiddleSection />
       </View>
       <View style={styles.container3}>
         <BottomSection />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -39,6 +45,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.Black,
   },
+  contentContainer: {
+    flexGrow: 1,
+  },
   container1: {
     backgroundColor: COLORS.LevenderGrey,
     height: ms(300, 0.2),
@@ -49,10 +58,9 @@ const styles = StyleSheet.create({
     height: ms(110),
   },
   container3: {
-    backgroundColor: COLORS.WhiteSmoke,
     flex: 1,
+    backgroundColor: COLORS.WhiteSmoke,
     borderRadius: ms(20),
-    width: '100%',
   },
 });
 

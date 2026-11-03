@@ -88,7 +88,7 @@ const GraphCard = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '54%',
+    flex: 1.25,
     gap: ms(7),
   },
 

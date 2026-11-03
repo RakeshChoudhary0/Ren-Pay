@@ -68,7 +68,7 @@ const SendAgainCard = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '42%',
+    flex: 1,
     gap: ms(7),
   },
 
