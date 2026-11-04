@@ -1,5 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Animated,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { ms } from 'react-native-size-matters';
 import { COLORS } from '../../Extras/Constants/colors';
 import { NumericPad } from '../Components/NumericPad';
@@ -13,43 +19,10 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
   const [pin, setPin] = useState<number[]>([]);
   const [invalidIndicator, setInvalidIndicator] = useState(false);
 
-  const { verifyPin, user } = useAuth();
+  const { verifyPin, user, pinLoading } = useAuth();
 
   //  Animated Wrong Indicator
   const shakeAnimation = useRef(new Animated.Value(0)).current;
-
-  const LoadingAnimation = useRef(new Animated.Value(0)).current;
-
-  const triggerLoad = () => {
-    LoadingAnimation.setValue(0);
-    Animated.sequence([
-      Animated.timing(shakeAnimation, {
-        toValue: 10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-    ]);
-  };
 
   const triggerShake = () => {
     shakeAnimation.setValue(0);
@@ -83,6 +56,7 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
   };
 
   const handlePress = async (val: any) => {
+    if (pinLoading) return;
     if (val === 'backspace') {
       setPin(prev => prev.slice(0, -1));
     } else if (pin.length < PIN_LENGTH) {
@@ -94,9 +68,9 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
 
         try {
           const res = await verifyPin(TYPED_PIN);
-          if (res.data.success) {
+          if (res?.data?.success) {
             console.log('The PIN is correct');
-          } else if (!res.data.success) {
+          } else {
             setInvalidIndicator(true);
             triggerShake();
             setTimeout(() => {
@@ -105,7 +79,14 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
               setInvalidIndicator(false);
             }, 200);
           }
-        } catch (error) {}
+        } catch (error) {
+          setInvalidIndicator(true);
+          triggerShake();
+          setTimeout(() => {
+            setPin([]);
+            setInvalidIndicator(false);
+          }, 200);
+        }
       }
     }
   };
@@ -115,7 +96,7 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
       <View>
         <View style={styles.textInputWrapper}>
           <Text style={styles.mpinHeading}>Enter MPIN</Text>
-          <Text style={styles.mpinHeading2}>{user.name}</Text>
+          <Text style={styles.mpinHeading2}>{user?.name || ''}</Text>
         </View>
 
         <PinDisplay
@@ -123,8 +104,14 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
           pinCount={pin.length}
           invalidIndicator={invalidIndicator}
           shakeAnimation={shakeAnimation}
-          LoadAnimation={LoadingAnimation}
         />
+        {pinLoading && (
+          <ActivityIndicator
+            size="small"
+            color={COLORS.LevenderGrey}
+            style={styles.loadingIndicator}
+          />
+        )}
       </View>
 
       <NumericPad onPress={handlePress} />
@@ -145,6 +132,9 @@ const styles = StyleSheet.create({
   },
   textInputWrapper: {
     marginBottom: ms(50),
+  },
+  loadingIndicator: {
+    marginTop: ms(16),
   },
   mpinHeading: {
     fontSize: ms(24),

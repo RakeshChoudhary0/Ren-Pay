@@ -1,5 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Animated,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { ms } from 'react-native-size-matters';
 import { COLORS } from '../../Extras/Constants/colors';
 import { PinDisplay } from '../Components/PinDisplay';
@@ -14,9 +20,8 @@ export const MpinRegisterPage = () => {
   const [pin, setPin] = useState<number[]>([]);
   const [invalidIndicator, setInvalidIndicator] = useState(false);
   const shakeAnimation = useRef(new Animated.Value(0)).current;
-  const LoadingAnimation = useRef(new Animated.Value(0)).current;
 
-  const { set_mpin } = useAuth();
+  const { set_mpin, pinLoading } = useAuth();
 
   const triggerShake = () => {
     shakeAnimation.setValue(0);
@@ -44,38 +49,8 @@ export const MpinRegisterPage = () => {
     ]).start();
   };
 
-  const triggerLoad = () => {
-    LoadingAnimation.setValue(0);
-    Animated.sequence([
-      Animated.timing(shakeAnimation, {
-        toValue: 10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-    ]);
-  };
-
   const handlePress = async (val: any) => {
+    if (pinLoading) return;
     if (val === 'backspace') {
       setPin(prev => prev.slice(0, -1));
       return;
@@ -100,10 +75,24 @@ export const MpinRegisterPage = () => {
           if (enteredPinString === firstPin) {
             try {
               const res = await set_mpin(enteredPinString);
-              if (res.data.success) {
+              if (res?.data?.success) {
                 console.log('MpinSeted SuccessFUlly');
+              } else {
+                setInvalidIndicator(true);
+                triggerShake();
+                setTimeout(() => {
+                  setPin([]);
+                  setInvalidIndicator(false);
+                }, 300);
               }
-            } catch (error) {}
+            } catch (error) {
+              setInvalidIndicator(true);
+              triggerShake();
+              setTimeout(() => {
+                setPin([]);
+                setInvalidIndicator(false);
+              }, 300);
+            }
           } else {
             // Mismatch handling
             setInvalidIndicator(true);
@@ -129,8 +118,14 @@ export const MpinRegisterPage = () => {
           pinCount={pin.length}
           invalidIndicator={invalidIndicator}
           shakeAnimation={shakeAnimation}
-          LoadAnimation={LoadingAnimation}
         />
+        {pinLoading && (
+          <ActivityIndicator
+            size="small"
+            color={COLORS.WhiteSmoke}
+            style={styles.loadingIndicator}
+          />
+        )}
       </View>
 
       <NumericPad onPress={handlePress} />
@@ -153,5 +148,8 @@ const styles = StyleSheet.create({
     color: COLORS.WhiteSmoke,
     textAlign: 'center',
     marginBottom: ms(50),
+  },
+  loadingIndicator: {
+    marginTop: ms(16),
   },
 });

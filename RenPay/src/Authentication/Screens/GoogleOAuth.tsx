@@ -14,7 +14,7 @@ import CircularDesign from '../Components/CircularDesign';
 import useAuth from '../../Extras/Context/AuthContext';
 
 const GoogleOAuth = ({ navigation }: { navigation: any }) => {
-  const { googleAuthentication } = useAuth();
+  const { googleAuthentication, signUpLoading } = useAuth();
 
   const styles = getStyles(COLORS);
   const HandleGoogleLogin = async () => {
@@ -39,7 +39,10 @@ const GoogleOAuth = ({ navigation }: { navigation: any }) => {
         </Text>
       </View>
       <View style={styles.googleLoginButton}>
-        <GoogleLoginButton onPress={HandleGoogleLogin} />
+        <GoogleLoginButton
+          onPress={HandleGoogleLogin}
+          loading={signUpLoading}
+        />
         <View style={styles.TAndC}>
           <TouchableOpacity
             onPress={() => {
@@ -102,7 +105,7 @@ const getStyles = (COLORS: ColorInterface) => {
       fontSize: ms(12),
       fontWeight: '400',
       textAlign: 'center',
-      color: COLORS.Gray,
+      color: COLORS.Green,
     },
   });
 };
