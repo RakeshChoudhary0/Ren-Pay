@@ -18,7 +18,7 @@ const AmountSection = ({
   // Split integer and decimal parts
   const parts = amount.split('.');
   const integerPart = parts[0] || '0';
-  const decimalPart = parts[1] !== undefined ? `.${parts[1]}` : '.';
+  const decimalPart = parts[1] !== undefined ? `.${parts[1]}` : '';
 
   return (
     <View style={styles.displayContainer}>
@@ -42,36 +42,39 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     justifyContent: 'space-between',
     paddingHorizontal: ms(22),
-    paddingBottom: ms(10),
+    paddingBottom: ms(6),
   },
   currencyLabel: {
-    fontSize: ms(40),
-    fontWeight: '600',
+    fontSize: ms(32),
+    fontWeight: '700',
     color: COLORS.White,
-    opacity: 0.8,
+    opacity: 0.85,
+    letterSpacing: 0.5,
   },
   amountRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
     gap: ms(2),
+    flexShrink: 1,
+    justifyContent: 'flex-end',
   },
   currencySymbol: {
-    fontSize: ms(52),
+    fontSize: ms(40),
     fontWeight: '600',
     color: COLORS.White,
     marginRight: ms(2),
   },
   integerText: {
-    fontSize: ms(50),
+    fontSize: ms(44),
     fontWeight: '700',
     color: COLORS.White,
     letterSpacing: -1,
   },
   decimalText: {
-    fontSize: ms(26),
+    fontSize: ms(24),
     fontWeight: '700',
     color: COLORS.White,
-    opacity: 0.6,
+    opacity: 0.65,
   },
 });
 

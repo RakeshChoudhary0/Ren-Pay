@@ -5,7 +5,11 @@ import MonthlyAnalyticalBubble from './SubComponent/MonthlyAnalyticalBubble';
 import { ms } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/Feather';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native';
+
 const MiddleSection = () => {
+  const navigation = useNavigation<any>();
+
   return (
     <View style={styles.container}>
       <View style={styles.BubblePosition}>
@@ -15,6 +19,9 @@ const MiddleSection = () => {
         <TouchableOpacity
           activeOpacity={0.8}
           style={[styles.Button, styles.FlexButton]}
+          onPress={() => {
+            navigation.navigate('Payment', { sendToUser: null });
+          }}
         >
           <Text style={styles.text}>Send</Text>
           <Icon

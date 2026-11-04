@@ -42,18 +42,18 @@ const SendToCard = ({ user, onChangeUser }: SendToCardProps) => {
 const styles = StyleSheet.create({
   container: {
     height: ms(75),
-    width: '94%',
+    width: '92%',
     backgroundColor: COLORS.Gray,
     borderRadius: ms(20),
-    paddingHorizontal: ms(3),
+    paddingHorizontal: ms(4),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     shadowColor: COLORS.Black || '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
   },
   infoWrapper: {
     flex: 1,

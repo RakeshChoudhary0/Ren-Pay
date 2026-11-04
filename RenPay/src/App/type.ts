@@ -15,6 +15,7 @@ export type RootStackParamList = {
   PasswordValidator: undefined;
   Home: undefined;
   Payment: { sendToUser: UserItem };
+  More: undefined;
 };
 
 declare global {

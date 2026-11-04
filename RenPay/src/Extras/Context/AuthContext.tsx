@@ -15,7 +15,7 @@ import {
 } from '../LocalStorage/UserStorage';
 import API from '../API/api';
 import { deleteToken, getToken, saveToken } from '../LocalStorage/keyStore';
-import { createMMKV, MMKV } from 'react-native-mmkv';
+import { createMMKV } from 'react-native-mmkv';
 
 const storage = createMMKV();
 const HAS_LAUNCHED_KEY = 'has_launched_before';
@@ -31,6 +31,8 @@ interface AuthContextType {
   verifyPin: (value: string) => Promise<any>;
   loading: boolean;
   pinLoading: boolean;
+  signUpLoading: boolean;
+  logOut: () => void;
 }
 
 GoogleSignin.configure({
@@ -49,6 +51,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<any>(() => getUserMMKv());
   const [loading, setLoading] = useState<boolean>(true);
   const [pinLoading, setPinLoading] = useState<boolean>(false);
+  const [signUpLoading, setSignUpLoading] = useState<boolean>(false);
 
   const logout = useCallback(async () => {
     try {
@@ -123,7 +126,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
   const googleAuthentication = async () => {
     try {
-      setLoading(true);
+      setSignUpLoading(true);
       await GoogleSignin.hasPlayServices();
       const response = await GoogleSignin.signIn();
       const idToken = response.data?.idToken;
@@ -147,7 +150,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       console.error('Google Sign-In Error:', error);
       throw error;
     } finally {
-      setLoading(false);
+      setSignUpLoading(false);
     }
   };
 
@@ -157,14 +160,15 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       const res = await API.post('auth/set-mpin', { mpin });
       if (res.data.success) {
         setUser(res.data.data);
+        setUserMMKv(res.data.data);
         setAuthenticated(true);
         const tokens: any = await getToken();
         await saveToken(res.data.accessToken, tokens?.refreshToken);
       }
-      setPinLoading(false);
       return res;
     } catch (error) {
       console.error('Error setting MPIN:', error);
+      throw error;
     } finally {
       setPinLoading(false);
     }
@@ -178,14 +182,27 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         const tokens: any = await getToken();
         await saveToken(res.data.accessToken, tokens?.refreshToken);
         setAuthenticated(true);
-        setPinLoading(false);
       }
       return res;
     } catch (error: any) {
       console.log('Verify PIN error:', error);
-      throw new Error(error.message);
+      throw error;
     } finally {
       setPinLoading(false);
+    }
+  };
+
+  const logOut = async () => {
+    try {
+      setLoading(true);
+      await deleteToken();
+      clearUserStorage();
+      setUser(null);
+      setAuthenticated(false);
+    } catch (error) {
+      console.log('Logout error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -201,7 +218,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         user,
         loading,
         pinLoading,
+        signUpLoading,
         verifyPin,
+        logOut,
       }}
     >
       {children}
