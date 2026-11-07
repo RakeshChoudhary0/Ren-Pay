@@ -29,11 +29,7 @@ const SendToCard = ({ user, onChangeUser }: SendToCardProps) => {
         onPress={onChangeUser}
         activeOpacity={0.7}
       >
-        <Icon
-          name="chevron-with-circle-right"
-          size={ms(20)}
-          color={COLORS.White || '#FFF'}
-        />
+        <Icon name="pencil" size={ms(20)} color={COLORS.White || '#FFF'} />
       </TouchableOpacity>
     </View>
   );
@@ -74,10 +70,11 @@ const styles = StyleSheet.create({
     letterSpacing: -0.4,
   },
   changeUserWrapper: {
-    width: ms(69),
-    height: ms(69),
-    borderRadius: ms(18),
-    backgroundColor: COLORS.PrimaryBorder,
+    width: ms(50),
+    height: ms(50),
+    marginRight: ms(5),
+    borderRadius: ms(120),
+    backgroundColor: COLORS.Black,
     alignItems: 'center',
     justifyContent: 'center',
   },
