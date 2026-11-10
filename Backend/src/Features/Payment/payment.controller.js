@@ -6,4 +6,9 @@ const getUsers = () => {
   }
 };
 
+const payToUser = (req, res) => {
+  try {
+  } catch (error) {}
+};
+
 export { getUsers };

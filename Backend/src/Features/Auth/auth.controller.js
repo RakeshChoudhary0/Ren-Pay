@@ -162,7 +162,7 @@ const useRefreshToken = async (req, res) => {
         .json({ message: "Invalid or expired refresh token" });
     }
 
-    const tokenQuery = `SELECT * FROM user_refresh_tokens WHERE token = $1 AND user_id = $2`;
+    const tokenQuery = `SELECT * FROM user_refresh_tokens WHERE token = $1 AND user_id = $2 AND expires_at > NOW()`;
     const tokenResult = await db.query(tokenQuery, [
       refreshToken,
       decodedToken.user_id,
@@ -180,7 +180,7 @@ const useRefreshToken = async (req, res) => {
       avatar: decodedToken.avatar,
     };
     const newAccessToken = GenerateJWT(payload, "15m");
-
+    
     return res.status(200).json({
       message: "Access token refreshed successfully",
       accessToken: newAccessToken,

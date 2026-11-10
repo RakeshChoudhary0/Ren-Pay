@@ -7,6 +7,7 @@ import RNHapticFeedback from 'react-native-haptic-feedback';
 
 interface NumericPadProps {
   onPress: (val: number | string) => void;
+  disabled: boolean;
 }
 
 const PAD_KEYS = [
@@ -24,7 +25,10 @@ const PAD_KEYS = [
   { type: 'backspace', value: 'backspace' },
 ];
 
-export const NumericPad: React.FC<NumericPadProps> = ({ onPress }) => {
+export const NumericPad: React.FC<NumericPadProps> = ({
+  onPress,
+  disabled = false,
+}) => {
   const options = {
     enableVibrateFallback: true,
     ignoreAndroidSystemSettings: false,
@@ -46,6 +50,7 @@ export const NumericPad: React.FC<NumericPadProps> = ({ onPress }) => {
           return (
             <TouchableOpacity
               key={item.value}
+              disabled={disabled}
               activeOpacity={0.7}
               style={styles.numberCircle}
               onPress={() => {

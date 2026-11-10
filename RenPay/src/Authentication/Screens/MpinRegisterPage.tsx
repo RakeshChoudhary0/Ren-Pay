@@ -11,6 +11,7 @@ import { COLORS } from '../../Extras/Constants/colors';
 import { PinDisplay } from '../Components/PinDisplay';
 import { NumericPad } from '../Components/NumericPad';
 import useAuth from '../../Extras/Context/AuthContext';
+import BrandingText from '../Components/BrandingText';
 
 const PIN_LENGTH = 6;
 
@@ -111,7 +112,7 @@ export const MpinRegisterPage = () => {
     <View style={styles.container}>
       <View>
         <Text style={styles.mpinHeading}>
-          {step === 'create' ? 'Create New MPIN' : 'Confirm Your MPIN'}
+          {step === 'create' ? 'Setup New MPIN' : 'Confirm Your MPIN'}
         </Text>
         <PinDisplay
           pinLength={PIN_LENGTH}
@@ -128,7 +129,8 @@ export const MpinRegisterPage = () => {
         )}
       </View>
 
-      <NumericPad onPress={handlePress} />
+      <NumericPad onPress={handlePress} disabled={pinLoading} />
+      <BrandingText />
     </View>
   );
 };
@@ -136,6 +138,7 @@ export const MpinRegisterPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     paddingTop: ms(60),
     justifyContent: 'center',
     alignItems: 'center',

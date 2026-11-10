@@ -114,7 +114,7 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
         )}
       </View>
 
-      <NumericPad onPress={handlePress} />
+      <NumericPad onPress={handlePress} disabled={pinLoading} />
 
       <BrandingText />
     </View>

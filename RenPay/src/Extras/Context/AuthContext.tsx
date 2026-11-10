@@ -165,6 +165,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         const tokens: any = await getToken();
         await saveToken(res.data.accessToken, tokens?.refreshToken);
       }
+      setPinLoading(false);
       return res;
     } catch (error) {
       console.error('Error setting MPIN:', error);
@@ -182,11 +183,13 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         const tokens: any = await getToken();
         await saveToken(res.data.accessToken, tokens?.refreshToken);
         setAuthenticated(true);
+        setPinLoading(false);
       }
       return res;
     } catch (error: any) {
       console.log('Verify PIN error:', error);
       throw error;
+      setPinLoading(false);
     } finally {
       setPinLoading(false);
     }
