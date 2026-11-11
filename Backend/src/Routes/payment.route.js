@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { getUsers } from "../Features/Payment/payment.controller.js";
 import { authMiddleware } from "../Middlewares/AuthMiddleWare.js";
+import { sendToUser } from "../Features/Payment/payment.controller.js";
 
 const router = Router();
 
-router.get("/get-users-on-search", authMiddleware, getUsers);
+router.post("/send", authMiddleware , sendToUser)
 
 export default router;

@@ -29,6 +29,7 @@ const NumberPad = ({
   balance = '12349',
   onSend,
   isSending = false,
+  disable = false,
 }: NumberPadProps) => {
   const keys: (number | string)[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, '.', 0, 'back'];
 
@@ -208,7 +209,7 @@ const NumberPad = ({
               key={k}
               style={styles.keyWrapper}
               activeOpacity={0.6}
-              disabled={isKeyDisabled}
+              disabled={(!isBack && disable) || isKeyDisabled}
               onPress={() => handlePress(k)}
             >
               <View

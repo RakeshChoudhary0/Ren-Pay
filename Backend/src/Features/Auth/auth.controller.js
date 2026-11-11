@@ -180,7 +180,7 @@ const useRefreshToken = async (req, res) => {
       avatar: decodedToken.avatar,
     };
     const newAccessToken = GenerateJWT(payload, "15m");
-    
+
     return res.status(200).json({
       message: "Access token refreshed successfully",
       accessToken: newAccessToken,
@@ -231,7 +231,7 @@ const useSetMpin = async (req, res) => {
     );
 
     const result = await db.query(
-      `UPDATE ren_users SET mpin = $1, updated_at = NOW() WHERE id = $2 
+      `UPDATE ren_users SET mpin = $1, updated_at = NOW() WHERE id = $2
       RETURNING id, email, name, avatar , mpin`,
       [hashed_mpin, userId],
     );

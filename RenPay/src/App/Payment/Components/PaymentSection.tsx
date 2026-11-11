@@ -34,11 +34,14 @@ const PaymentSection = ({
   onChangeUser,
   amount,
   setAmount,
-  balance = '12349',
+  balance,
   onSend,
   isSending = false,
 }: PaymentSectionProps) => {
   const [note, setNote] = useState<string>('');
+
+  const isSufficient = Number(amount) > Number(balance);
+  console.log(isSufficient);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -78,6 +81,7 @@ const PaymentSection = ({
           <NumberPad
             amount={amount}
             balance={balance}
+            disable={isSufficient}
             setAmount={setAmount}
             onSend={onSend}
             isSending={isSending}
@@ -119,7 +123,7 @@ const styles = StyleSheet.create({
     borderRadius: ms(20),
   },
   noteInput: {
-    color: COLORS.White,
+    color: COLORS.Black,
     fontSize: ms(13),
     fontWeight: '500',
     padding: 0,

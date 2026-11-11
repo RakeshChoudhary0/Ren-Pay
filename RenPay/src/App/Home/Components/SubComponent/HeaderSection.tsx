@@ -3,17 +3,20 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { COLORS } from '../../../../Extras/Constants/colors';
 import { ms } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import MoreScreen from '../../../More/MoreScreen';
 import { useNavigation } from '@react-navigation/native';
+import useAuth from '../../../../Extras/Context/AuthContext';
 const ICON = require('../../../../Extras/Assets/SQUARE_DOT.png');
 
 const HeaderSection = () => {
   const navigation = useNavigation();
+  const { user } = useAuth();
   return (
     <View style={styles.HeaderContainer}>
       <View>
         <View style={styles.TitleRow}>
-          <Text style={styles.TitleTextBold}>Hi Rakesh! </Text>
+          <Text style={styles.TitleTextBold}>
+            Hi {user?.name?.split(' ')[0]}!{' '}
+          </Text>
           <Text style={styles.TitleText}>Welcome</Text>
         </View>
         <Text style={styles.TitleText}>to your wallet.</Text>
@@ -53,6 +56,7 @@ const styles = StyleSheet.create({
     color: COLORS.Black,
     fontWeight: '800',
     letterSpacing: -0.4,
+    textTransform: 'capitalize',
   },
   TitleText: {
     fontSize: ms(17),

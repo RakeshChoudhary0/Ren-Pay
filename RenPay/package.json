@@ -25,10 +25,11 @@
     "react-native-linear-gradient": "^2.8.3",
     "react-native-mmkv": "^4.3.2",
     "react-native-nitro-modules": "^0.37.0",
+    "react-native-qrcode-svg": "^6.3.54",
     "react-native-safe-area-context": "^5.5.2",
     "react-native-screens": "^4.27.0",
     "react-native-size-matters": "^0.4.2",
-    "react-native-svg": "^15.15.5",
+    "react-native-svg": "^15.16.1",
     "react-native-vector-icons": "^10.3.0"
   },
   "devDependencies": {

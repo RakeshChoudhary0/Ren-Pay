@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { COLORS } from '../../../Extras/Constants/colors';
+import {  StyleSheet, View } from 'react-native';
 import { ms } from 'react-native-size-matters';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import HeaderSection from './SubComponent/HeaderSection';
 import CurrencyChangeCard from './SubComponent/CurrencyChangeCard';
 import MoneySection from './SubComponent/MoneySection';
-
-const ICON = require('../../../Extras/Assets/SQUARE_DOT.png');
-
-const user = {
-  name: 'Rakesh Choudhary',
-  Balance: '1195932',
-};
+//
 
 const UpperCard = () => {
   const [showInr, setShowInr] = useState(true);
@@ -20,7 +12,7 @@ const UpperCard = () => {
     <View style={styles.container}>
       <HeaderSection />
       <CurrencyChangeCard setShowInr={setShowInr} showInr={showInr} />
-      <MoneySection Balance={user.Balance} showInr={showInr} />
+      <MoneySection  showInr={showInr} />
     </View>
   );
 };

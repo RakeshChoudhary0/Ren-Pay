@@ -6,20 +6,21 @@ import { COLORS } from '../../../Extras/Constants/colors';
 import Header from '../Components/Header';
 import PaymentSection from '../Components/PaymentSection';
 import UserSearchSection, { UserItem } from '../Components/UserSearchSection';
+import useAuth from '../../../Extras/Context/AuthContext';
 
 const Payment = () => {
   const route = useRoute();
   const navigation = useNavigation<any>();
-  const params = (route.params as { sendToUser?: any }) || {};
+  const { accountDetails } = useAuth();
 
-  // If sendToUser was passed, start with it; otherwise start null so search is shown
+  const params = (route.params as { sendToUser?: any }) || {};
   const [selectedUser, setSelectedUser] = useState<UserItem | null>(
     params.sendToUser || null,
   );
 
   const [amount, setAmount] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const userBalance = '12349';
+  const userBalance = accountDetails.balance;
 
   const handleSendPayment = async () => {
     if (!selectedUser) {
@@ -41,7 +42,7 @@ const Payment = () => {
       setIsSending(true);
       // Simulate network transaction delay
       await new Promise(resolve => setTimeout(() => resolve(true), 1200));
-
+      
       Alert.alert(
         'Payment Successful',
         `₹${Number(amount).toLocaleString('en-IN')} sent to ${

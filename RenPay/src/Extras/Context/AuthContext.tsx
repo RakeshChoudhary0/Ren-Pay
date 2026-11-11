@@ -32,7 +32,8 @@ interface AuthContextType {
   loading: boolean;
   pinLoading: boolean;
   signUpLoading: boolean;
-  logOut: () => void;
+  FetchAccountDetails: () => Promise<any>;
+  accountDetails: any;
 }
 
 GoogleSignin.configure({
@@ -52,6 +53,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [pinLoading, setPinLoading] = useState<boolean>(false);
   const [signUpLoading, setSignUpLoading] = useState<boolean>(false);
+  const [accountDetails, setAccountDetails] = useState<any>();
 
   const logout = useCallback(async () => {
     try {
@@ -61,8 +63,8 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
           refreshToken: tokens.refreshToken,
         }).catch(() => {});
       }
-    } catch (error) {
-      console.log('Server logout failed or network offline');
+    } catch (e) {
+      console.log('Server logout failed or network offline', e);
     } finally {
       await deleteToken();
       clearUserStorage();
@@ -122,6 +124,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     getMe();
+    FetchAccountDetails();
   }, [getMe]);
 
   const googleAuthentication = async () => {
@@ -165,7 +168,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         const tokens: any = await getToken();
         await saveToken(res.data.accessToken, tokens?.refreshToken);
       }
-      setPinLoading(false);
       return res;
     } catch (error) {
       console.error('Error setting MPIN:', error);
@@ -183,29 +185,27 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         const tokens: any = await getToken();
         await saveToken(res.data.accessToken, tokens?.refreshToken);
         setAuthenticated(true);
-        setPinLoading(false);
       }
       return res;
     } catch (error: any) {
       console.log('Verify PIN error:', error);
       throw error;
-      setPinLoading(false);
     } finally {
       setPinLoading(false);
     }
   };
 
-  const logOut = async () => {
+  const FetchAccountDetails = async () => {
     try {
-      setLoading(true);
-      await deleteToken();
-      clearUserStorage();
-      setUser(null);
-      setAuthenticated(false);
+      const res = await API.get('account');
+      console.log('Query Fired');
+      if (res.data?.success) {
+        setAccountDetails(res.data.data);
+        console.log(res.data);
+      }
+      return res;
     } catch (error) {
-      console.log('Logout error:', error);
-    } finally {
-      setLoading(false);
+      console.log(error)
     }
   };
 
@@ -223,7 +223,8 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         pinLoading,
         signUpLoading,
         verifyPin,
-        logOut,
+        FetchAccountDetails,
+        accountDetails,
       }}
     >
       {children}

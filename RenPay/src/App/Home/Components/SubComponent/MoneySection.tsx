@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { COLORS } from '../../../../Extras/Constants/colors';
 import { ms } from 'react-native-size-matters';
-import Icon from 'react-native-vector-icons/Ionicons';
+import useAuth from '../../../../Extras/Context/AuthContext';
 
 interface MoneySectionProps {
   showInr: boolean;
-  Balance: string;
 }
 
-const MoneySection = ({ showInr, Balance }: MoneySectionProps) => {
+const MoneySection = ({ showInr }: MoneySectionProps) => {
   const [visible, setVisible] = useState<boolean>(false);
+  const [loadingState, setLoadingState] = useState<boolean>(false);
+  const { accountDetails, FetchAccountDetails } = useAuth();
+  const Balance = accountDetails?.balance;
 
   const numericBalance = Number(Balance);
   const formattedBalance = showInr
@@ -22,8 +30,16 @@ const MoneySection = ({ showInr, Balance }: MoneySectionProps) => {
 
   const styles = getStyles(FONTSIZE);
 
-  const handleVisibleSwitch = () => {
+  const handleVisibleSwitch = async () => {
+    setLoadingState(true);
     setVisible(prev => !prev);
+    try {
+      await FetchAccountDetails();
+    } catch (error) {
+      console.log('Error While Fetching Data',error);
+    } finally {
+      setLoadingState(false);
+    }
   };
 
   return (
@@ -40,12 +56,14 @@ const MoneySection = ({ showInr, Balance }: MoneySectionProps) => {
               <Text style={styles.CurrencyStyleDot}>{',' + split[1]}</Text>
             </Text>
           </>
+        ) : loadingState ? (
+          <ActivityIndicator color={COLORS.Black} size={'large'} />
         ) : (
           <View style={styles.HiddenContainer}>
             <Text style={styles.CurrencyStyle}>{showInr ? '₹' : '$'}</Text>
             <View style={styles.dotContainer}>
-              {Array(0, 1, 2, 3, 4).map(index => (
-                <View key={index} style={styles.circle}></View>
+              {[0, 1, 2, 3, 4].map(index => (
+                <View key={index} style={styles.circle}/>
               ))}
             </View>
           </View>
