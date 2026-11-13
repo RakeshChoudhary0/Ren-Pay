@@ -205,7 +205,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       }
       return res;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 

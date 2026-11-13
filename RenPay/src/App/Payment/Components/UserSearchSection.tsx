@@ -11,13 +11,13 @@ import {
 import { ms } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/Feather';
 import { COLORS } from '../../../Extras/Constants/colors';
+import UserProfile from './SubComponent/UserProfile';
 
 export interface UserItem {
   id?: string;
   name: string;
   email: string;
   avatar?: string;
-  phone?: string;
 }
 
 const DEFAULT_USERS: UserItem[] = [
@@ -66,8 +66,7 @@ const UserSearchSection = ({ onSelectUser }: UserSearchSectionProps) => {
     const q = query.toLowerCase().trim();
     if (!q) return true;
     return (
-      u.name.toLowerCase().includes(q) ||
-      u.email.toLowerCase().includes(q)
+      u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
     );
   });
 
@@ -96,7 +95,6 @@ const UserSearchSection = ({ onSelectUser }: UserSearchSectionProps) => {
         {query ? 'Search Results' : 'Suggested Contacts'}
       </Text>
 
-      {/* Contact List */}
       <FlatList
         data={filteredUsers}
         keyExtractor={item => item.id || item.email}
@@ -110,34 +108,7 @@ const UserSearchSection = ({ onSelectUser }: UserSearchSectionProps) => {
           </View>
         }
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.userCard}
-            activeOpacity={0.7}
-            onPress={() => onSelectUser(item)}
-          >
-            {item.avatar ? (
-              <Image source={{ uri: item.avatar }} style={styles.avatar} />
-            ) : (
-              <View style={styles.avatarPlaceholder}>
-                <Text style={styles.avatarInitial}>
-                  {item.name.charAt(0).toUpperCase()}
-                </Text>
-              </View>
-            )}
-
-            <View style={styles.userInfo}>
-              <Text numberOfLines={1} style={styles.userName}>
-                {item.name}
-              </Text>
-              <Text numberOfLines={1} style={styles.userEmail}>
-                {item.email}
-              </Text>
-            </View>
-
-            <View style={styles.actionIcon}>
-              <Icon name="arrow-up-right" size={ms(18)} color={COLORS.White} />
-            </View>
-          </TouchableOpacity>
+          <UserProfile item={item} onSelectUser={onSelectUser} />
         )}
       />
     </View>
@@ -179,58 +150,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   listContent: {
-    gap: ms(8),
+    gap: ms(2),
     paddingBottom: ms(30),
-  },
-  userCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: `${COLORS.Gray}60`,
-    borderRadius: ms(16),
-    padding: ms(10),
-    borderWidth: 1,
-    borderColor: `${COLORS.PrimaryBorder}20`,
-  },
-  avatar: {
-    width: ms(46),
-    height: ms(46),
-    borderRadius: ms(23),
-  },
-  avatarPlaceholder: {
-    width: ms(46),
-    height: ms(46),
-    borderRadius: ms(23),
-    backgroundColor: `${COLORS.LevenderGrey}40`,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  avatarInitial: {
-    color: COLORS.White,
-    fontSize: ms(18),
-    fontWeight: '700',
-  },
-  userInfo: {
-    flex: 1,
-    marginLeft: ms(12),
-    justifyContent: 'center',
-  },
-  userName: {
-    fontSize: ms(15),
-    fontWeight: '700',
-    color: COLORS.White,
-  },
-  userEmail: {
-    fontSize: ms(12),
-    color: COLORS.LevenderGrey,
-    marginTop: ms(2),
-  },
-  actionIcon: {
-    width: ms(36),
-    height: ms(36),
-    borderRadius: ms(18),
-    backgroundColor: `${COLORS.LevenderGrey}25`,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   emptyContainer: {
     alignItems: 'center',

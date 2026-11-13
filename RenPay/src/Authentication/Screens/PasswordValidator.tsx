@@ -12,6 +12,7 @@ import { NumericPad } from '../Components/NumericPad';
 import { PinDisplay } from '../Components/PinDisplay';
 import useAuth from '../../Extras/Context/AuthContext';
 import BrandingText from '../Components/BrandingText';
+import { triggerShake } from '../../Extras/Utils/ShakeAnimation';
 
 const PIN_LENGTH = 6;
 
@@ -23,37 +24,6 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
 
   //  Animated Wrong Indicator
   const shakeAnimation = useRef(new Animated.Value(0)).current;
-
-  const triggerShake = () => {
-    shakeAnimation.setValue(0);
-    Animated.sequence([
-      Animated.timing(shakeAnimation, {
-        toValue: 10,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -5,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: 10,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -5,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: 0,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
 
   const handlePress = async (val: any) => {
     if (pinLoading) return;
@@ -72,7 +42,7 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
             console.log('The PIN is correct');
           } else {
             setInvalidIndicator(true);
-            triggerShake();
+            triggerShake(shakeAnimation);
             setTimeout(() => {
               setPin([]);
               console.log('Password was incorrect');
@@ -81,7 +51,7 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
           }
         } catch (error) {
           setInvalidIndicator(true);
-          triggerShake();
+          triggerShake(shakeAnimation);
           setTimeout(() => {
             setPin([]);
             setInvalidIndicator(false);

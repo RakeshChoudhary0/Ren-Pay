@@ -12,6 +12,7 @@ import { PinDisplay } from '../Components/PinDisplay';
 import { NumericPad } from '../Components/NumericPad';
 import useAuth from '../../Extras/Context/AuthContext';
 import BrandingText from '../Components/BrandingText';
+import { triggerShake } from '../../Extras/Utils/ShakeAnimation';
 
 const PIN_LENGTH = 6;
 
@@ -23,32 +24,6 @@ export const MpinRegisterPage = () => {
   const shakeAnimation = useRef(new Animated.Value(0)).current;
 
   const { set_mpin, pinLoading } = useAuth();
-
-  const triggerShake = () => {
-    shakeAnimation.setValue(0);
-    Animated.sequence([
-      Animated.timing(shakeAnimation, {
-        toValue: 10,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -10,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: 10,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: 0,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
 
   const handlePress = async (val: any) => {
     if (pinLoading) return;
@@ -80,7 +55,7 @@ export const MpinRegisterPage = () => {
                 console.log('MpinSeted SuccessFUlly');
               } else {
                 setInvalidIndicator(true);
-                triggerShake();
+                triggerShake(shakeAnimation);
                 setTimeout(() => {
                   setPin([]);
                   setInvalidIndicator(false);
@@ -88,7 +63,7 @@ export const MpinRegisterPage = () => {
               }
             } catch (error) {
               setInvalidIndicator(true);
-              triggerShake();
+              triggerShake(shakeAnimation);
               setTimeout(() => {
                 setPin([]);
                 setInvalidIndicator(false);
@@ -97,7 +72,7 @@ export const MpinRegisterPage = () => {
           } else {
             // Mismatch handling
             setInvalidIndicator(true);
-            triggerShake();
+            triggerShake(shakeAnimation);
             setTimeout(() => {
               setPin([]);
               setInvalidIndicator(false);

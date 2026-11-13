@@ -10,6 +10,7 @@ import { MpinRegisterPage } from './Authentication/Screens/MpinRegisterPage';
 import useAuth from './Extras/Context/AuthContext';
 import Payment from './App/Payment/Screens/Payment';
 import MoreScreen from './App/More/MoreScreen';
+import MpinVerification from './App/Payment/Screens/MpinVerification';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +46,10 @@ const RootNavigator = () => {
               <>
                 <Stack.Screen name="Home" component={HomePage} />
                 <Stack.Screen name="Payment" component={Payment} />
+                <Stack.Screen
+                  name="MpinVerification"
+                  component={MpinVerification}
+                />
                 <Stack.Screen name="More" component={MoreScreen} />
               </>
             ) : (

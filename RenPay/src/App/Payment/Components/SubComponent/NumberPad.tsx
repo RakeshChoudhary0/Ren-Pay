@@ -1,8 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import {
   ActivityIndicator,
-  Animated,
-  PanResponder,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -88,76 +86,13 @@ const NumberPad = ({
     setAmount(amount + key);
   };
 
-  // Swipe to Send Logic
-  const [trackWidth, setTrackWidth] = React.useState(0);
-  const KNOB_WIDTH = ms(50);
-  const KNOB_PADDING = ms(4);
-  const maxSwipe = Math.max(0, trackWidth - KNOB_WIDTH - KNOB_PADDING * 2);
-  const swipeX = useRef(new Animated.Value(0)).current;
-
-  // Keep ref to latest state/props for PanResponder closures
-  const stateRef = useRef({ canSend, maxSwipe, onSend, isSending });
-  useEffect(() => {
-    stateRef.current = { canSend, maxSwipe, onSend, isSending };
-  }, [canSend, maxSwipe, onSend, isSending]);
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onStartShouldSetPanResponderCapture: () => false,
-      onMoveShouldSetPanResponder: (_, gestureState) => {
-        return stateRef.current.canSend && Math.abs(gestureState.dx) > 3;
-      },
-      onMoveShouldSetPanResponderCapture: (_, gestureState) => {
-        return stateRef.current.canSend && Math.abs(gestureState.dx) > 3;
-      },
-      onPanResponderGrant: () => {
-        swipeX.stopAnimation();
-      },
-      onPanResponderMove: (_, gestureState) => {
-        const { canSend: allowed, maxSwipe: limit } = stateRef.current;
-        if (!allowed || limit <= 0) return;
-        const clampedX = Math.max(0, Math.min(gestureState.dx, limit));
-        swipeX.setValue(clampedX);
-      },
-      onPanResponderRelease: (_, gestureState) => {
-        const {
-          canSend: allowed,
-          maxSwipe: limit,
-          onSend: sendFn,
-        } = stateRef.current;
-        if (allowed && limit > 0 && gestureState.dx >= limit * 0.7) {
-          triggerHaptic('notificationSuccess');
-          Animated.timing(swipeX, {
-            toValue: limit,
-            duration: 150,
-            useNativeDriver: false,
-          }).start(() => {
-            if (sendFn) {
-              sendFn();
-            }
-            Animated.timing(swipeX, {
-              toValue: 0,
-              duration: 250,
-              useNativeDriver: false,
-            }).start();
-          });
-        } else {
-          Animated.spring(swipeX, {
-            toValue: 0,
-            useNativeDriver: false,
-            bounciness: 4,
-          }).start();
-        }
-      },
-      onPanResponderTerminate: () => {
-        Animated.spring(swipeX, {
-          toValue: 0,
-          useNativeDriver: false,
-        }).start();
-      },
-    }),
-  ).current;
+  const handleSendPress = () => {
+    if (!canSend) return;
+    triggerHaptic('notificationSuccess');
+    if (onSend) {
+      onSend();
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -232,16 +167,13 @@ const NumberPad = ({
         })}
       </View>
 
-      {/* Swipe to Pay action */}
+      {/* Click to Pay action (Replaced Swipe) */}
       <View style={styles.SendButtonContainer}>
-        <View
+        <TouchableOpacity
+          activeOpacity={canSend ? 0.8 : 1}
+          disabled={!canSend}
+          onPress={handleSendPress}
           style={[styles.SwipeWrapper, !canSend && styles.SwipeDisabledWrapper]}
-          onLayout={e => {
-            const w = e.nativeEvent.layout.width;
-            if (w && w !== trackWidth) {
-              setTrackWidth(w);
-            }
-          }}
         >
           <Text style={styles.SwipeText}>
             {isSending
@@ -250,31 +182,23 @@ const NumberPad = ({
               ? 'Insufficient Balance'
               : numAmount === 0
               ? 'Enter an amount to send'
-              : 'Swipe to Send  →'}
+              : 'Proceed to Pay'}
           </Text>
 
           {canSend && (
-            <Animated.View
-              {...panResponder.panHandlers}
-              style={[
-                styles.SwipeKnob,
-                {
-                  transform: [{ translateX: swipeX }],
-                },
-              ]}
-            >
+            <View style={styles.SwipeKnob}>
               {isSending ? (
                 <ActivityIndicator size="small" color={COLORS.White} />
               ) : (
                 <FeatherIcon
-                  name="chevrons-right"
-                  size={ms(24)}
+                  name="arrow-right"
+                  size={ms(22)}
                   color={COLORS.White}
                 />
               )}
-            </Animated.View>
+            </View>
           )}
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -344,7 +268,7 @@ const styles = StyleSheet.create({
   },
   SwipeKnob: {
     position: 'absolute',
-    left: ms(9),
+    right: ms(9),
     width: ms(50),
     height: ms(50),
     borderRadius: ms(25),

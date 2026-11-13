@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../../../Extras/Constants/colors';
@@ -8,61 +8,59 @@ import PaymentSection from '../Components/PaymentSection';
 import UserSearchSection, { UserItem } from '../Components/UserSearchSection';
 import useAuth from '../../../Extras/Context/AuthContext';
 
+import generateIdempotencyKey from '../../../Extras/Utils/idempotencyKey';
+
 const Payment = () => {
   const route = useRoute();
   const navigation = useNavigation<any>();
   const { accountDetails } = useAuth();
+  const userBalance = accountDetails?.balance || 0;
+  const { user } = useAuth();
 
-  const params = (route.params as { sendToUser?: any }) || {};
-  const [selectedUser, setSelectedUser] = useState<UserItem | null>(
+  const params =
+    (route.params as { sendToUser?: UserItem; idempotency_key?: string }) || {};
+
+  const [selectedUser, setSelectedUser] = useState<UserItem | any>(
     params.sendToUser || null,
   );
 
   const [amount, setAmount] = useState('');
-  const [isSending, setIsSending] = useState(false);
-  const userBalance = accountDetails.balance;
+  const [note, setNote] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSendPayment = async () => {
+  const handleProccedToMpinVerification = async () => {
     if (!selectedUser) {
-      Alert.alert('Select Recipient', 'Please select a recipient first.');
+      if (!selectedUser) {
+        Alert.alert('Select Recipient', 'Please select a recipient first.');
+        return;
+      }
+    }
+
+    const parsedAmount = Number(amount);
+
+    if (!amount || isNaN(parsedAmount) || parsedAmount <= 0) {
+      Alert.alert(
+        'Invalid Amount',
+        'Please enter a valid amount greater than 0.',
+      );
       return;
     }
 
-    if (!amount || Number(amount) <= 0) {
-      Alert.alert('Invalid Amount', 'Please enter a valid amount.');
-      return;
-    }
-
-    if (Number(amount) > Number(userBalance)) {
+    if (parsedAmount > Number(userBalance)) {
       Alert.alert('Insufficient Balance', 'You do not have enough funds.');
       return;
     }
 
-    try {
-      setIsSending(true);
-      // Simulate network transaction delay
-      await new Promise(resolve => setTimeout(() => resolve(true), 1200));
-      
-      Alert.alert(
-        'Payment Successful',
-        `₹${Number(amount).toLocaleString('en-IN')} sent to ${
-          selectedUser.name
-        }!`,
-        [
-          {
-            text: 'Done',
-            onPress: () => navigation.goBack(),
-          },
-        ],
-      );
-    } catch (error) {
-      Alert.alert(
-        'Transaction Failed',
-        'Something went wrong. Please try again.',
-      );
-    } finally {
-      setIsSending(false);
-    }
+    const idempotencyKey = generateIdempotencyKey(user.id, selectedUser.id);
+
+    navigation.navigate('MpinVerification', {
+      receiver_id: selectedUser.id,
+      receiver_email: selectedUser.email,
+      receiver_name: selectedUser.name,
+      amount: amount,
+      note: note,
+      idempotency_key: idempotencyKey,
+    });
   };
 
   return (
@@ -73,10 +71,11 @@ const Payment = () => {
           <PaymentSection
             user={selectedUser}
             amount={amount}
+            setNote={setNote}
             setAmount={setAmount}
             balance={userBalance}
-            onSend={handleSendPayment}
-            isSending={isSending}
+            onSend={handleProccedToMpinVerification}
+            isSending={isLoading}
             onChangeUser={() => {
               setSelectedUser(null);
               setAmount('');

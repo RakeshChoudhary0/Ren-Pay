@@ -26,6 +26,8 @@ interface PaymentSectionProps {
   setAmount: (val: string) => void;
   balance?: string;
   onSend?: () => Promise<void> | void;
+  setNote?: (val: string) => void;
+  note?: string;
   isSending?: boolean;
 }
 
@@ -35,13 +37,12 @@ const PaymentSection = ({
   amount,
   setAmount,
   balance,
+  setNote,
+  note,
   onSend,
   isSending = false,
 }: PaymentSectionProps) => {
-  const [note, setNote] = useState<string>('');
-
   const isSufficient = Number(amount) > Number(balance);
-  console.log(isSufficient);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>

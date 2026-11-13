@@ -3,6 +3,7 @@ import { RouteProp } from '@react-navigation/native';
 
 export interface UserItem {
   id: string;
+  name: string;
   avatar: string;
   email: string;
 }
@@ -14,8 +15,9 @@ export type RootStackParamList = {
   MpinRegistration: undefined;
   PasswordValidator: undefined;
   Home: undefined;
-  Payment: { sendToUser: UserItem };
+  Payment: { sendToUser: UserItem; idempotency_key: string };
   More: undefined;
+  MpinVerification: any;
 };
 
 declare global {

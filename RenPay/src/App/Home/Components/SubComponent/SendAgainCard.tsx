@@ -4,6 +4,9 @@ import { ms } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/Feather';
 import { COLORS } from '../../../../Extras/Constants/colors';
 import { useNavigation } from '@react-navigation/native';
+import generateIdempotencyKey from '../../../../Extras/Utils/idempotencyKey';
+import useAuth from '../../../../Extras/Context/AuthContext';
+
 const useData = [
   {
     id: '1',
@@ -28,6 +31,7 @@ const useData = [
 ];
 
 const SendAgainCard = () => {
+  const { user } = useAuth();
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -39,7 +43,11 @@ const SendAgainCard = () => {
           <TouchableOpacity
             key={sendToUser.id}
             onPress={() => {
-              navigation.navigate('Payment', { sendToUser });
+              const idempotency_key = generateIdempotencyKey(
+                user.id,
+                sendToUser.id,
+              );
+              navigation.navigate('Payment', { sendToUser, idempotency_key });
             }}
             style={styles.avatarWrapper}
           >
