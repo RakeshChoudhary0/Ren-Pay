@@ -8,13 +8,15 @@
  *
  */
 
-export interface User {
+export interface ren_users {
   id: number;
   name: string;
   email: string;
+  avatar: string;
   mpin: string;
   google_id: string;
   created_at: Date;
+  updated_at: Date;
 }
 
 export interface user_refresh_tokens {
@@ -24,15 +26,6 @@ export interface user_refresh_tokens {
   created_at: Date;
   expires_at: Date;
 }
-
-// export interface UserRefreshToken {
-//   id: string;
-//   user_id: number;
-//   token: string;
-//   is_revoked: boolean; // for logout
-//   created_at: Date;
-//   expires_at: Date;
-// }
 
 export interface Account {
   id: number;

@@ -12,12 +12,10 @@ const generateTxnId = () => {
   return `TXN${timestamp}${randomSuffix}`;
 };
 
-
 /**
  * Controller: sendToUser
  * Performs money transfer between sender and receiver in an atomic database transaction.
  */
-
 
 const sendToUser = async (req, res) => {
   const senderId = req.user?.user_id;
@@ -50,18 +48,24 @@ const sendToUser = async (req, res) => {
   if (!receiver_id && !receiver_email) {
     return res.status(400).json({
       success: false,
-      message: "Receiver identifier (receiver_id or receiver_email) is required",
+      message:
+        "Receiver identifier (receiver_id or receiver_email) is required",
     });
   }
 
   // 2. Check Idempotency (prevent duplicate payment execution)
-  const finalIdempotencyKey =
-    idempotency_key || `IDEMP_${senderId}_${Date.now()}_${crypto.randomBytes(4).toString("hex")}`;
+
+  if (!idempotency_key) {
+    return res.status(400).json({
+      success: false,
+      message: "Idempotency key is required",
+    });
+  }
 
   if (idempotency_key) {
     const existingTxn = await db.query(
       `SELECT * FROM transactions WHERE idempotency_key = $1`,
-      [idempotency_key]
+      [idempotency_key],
     );
 
     if (existingTxn.rows.length > 0) {
@@ -75,11 +79,18 @@ const sendToUser = async (req, res) => {
   }
 
   // 3. Verify MPIN (if provided or enforced)
+
+  if (!mpin) {
+    return res.status(400).json({
+      success: false,
+      message: "MPIN is required",
+    });
+  }
+
   if (mpin) {
-    const userRes = await db.query(
-      `SELECT mpin FROM ren_users WHERE id = $1`,
-      [senderId]
-    );
+    const userRes = await db.query(`SELECT mpin FROM ren_users WHERE id = $1`, [
+      senderId,
+    ]);
 
     if (userRes.rows.length === 0 || !userRes.rows[0].mpin) {
       return res.status(400).json({
@@ -97,14 +108,12 @@ const sendToUser = async (req, res) => {
     }
   }
 
-
-
   // 4. Resolve Receiver ID
   let targetReceiverId = receiver_id;
   if (!targetReceiverId && receiver_email) {
     const receiverRes = await db.query(
       `SELECT id FROM ren_users WHERE LOWER(email) = LOWER($1)`,
-      [receiver_email]
+      [receiver_email],
     );
     if (receiverRes.rows.length === 0) {
       return res.status(404).json({
@@ -121,7 +130,6 @@ const sendToUser = async (req, res) => {
       message: "You cannot transfer money to yourself",
     });
   }
-
 
   // 5. Begin Database Transaction for Atomic Transfer
   const client = await db.connect();
@@ -172,7 +180,9 @@ const sendToUser = async (req, res) => {
       WHERE user_id = $1 
       FOR UPDATE
     `;
-    let receiverAccRes = await client.query(receiverAccQuery, [targetReceiverId]);
+    let receiverAccRes = await client.query(receiverAccQuery, [
+      targetReceiverId,
+    ]);
 
     // If receiver account does not exist yet, auto-create it
     if (receiverAccRes.rows.length === 0) {
@@ -202,7 +212,7 @@ const sendToUser = async (req, res) => {
       `UPDATE accounts 
        SET balance = balance - $1, updated_at = NOW() 
        WHERE id = $2`,
-      [parsedAmount, senderAccount.id]
+      [parsedAmount, senderAccount.id],
     );
 
     // Credit to receiver
@@ -210,7 +220,7 @@ const sendToUser = async (req, res) => {
       `UPDATE accounts 
        SET balance = balance + $1, updated_at = NOW() 
        WHERE id = $2`,
-      [parsedAmount, receiverAccount.id]
+      [parsedAmount, receiverAccount.id],
     );
 
     // Record the transaction
@@ -235,7 +245,7 @@ const sendToUser = async (req, res) => {
 
     const txnResult = await client.query(insertTxnQuery, [
       txnId,
-      finalIdempotencyKey,
+      idempotency_key,
       senderId,
       targetReceiverId,
       parsedAmount,
@@ -274,7 +284,7 @@ const sendToUser = async (req, res) => {
           currency,
           note,
           error.message || "Internal transfer failure",
-        ]
+        ],
       );
     } catch (logErr) {
       console.error("Failed to log failed transaction:", logErr);
