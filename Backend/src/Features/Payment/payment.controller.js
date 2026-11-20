@@ -277,7 +277,7 @@ const sendToUser = async (req, res) => {
         ) VALUES ($1, $2, $3, $4, $5, $6, 'FAILED', 'TRANSFER', $7, $8)`,
         [
           txnId,
-          finalIdempotencyKey,
+          idempotency_key,
           senderId,
           targetReceiverId || null,
           parsedAmount,
