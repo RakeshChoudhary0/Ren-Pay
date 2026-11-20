@@ -1,6 +1,7 @@
 import db from "../../Config/pg.js";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
+import { CodeChallengeMethod } from "google-auth-library";
 
 /**
  * Helper: Generate unique transaction ID
@@ -12,10 +13,12 @@ const generateTxnId = () => {
   return `TXN${timestamp}${randomSuffix}`;
 };
 
+
 /**
  * Controller: sendToUser
  * Performs money transfer between sender and receiver in an atomic database transaction.
  */
+
 
 const sendToUser = async (req, res) => {
   const senderId = req.user?.user_id;
@@ -140,9 +143,9 @@ const sendToUser = async (req, res) => {
 
     // Fetch sender account with row-level lock (FOR UPDATE)
     const senderAccQuery = `
-      SELECT id, balance, is_frozen, currency 
-      FROM accounts 
-      WHERE user_id = $1 
+      SELECT id, balance, is_frozen, currency
+      FROM accounts
+      WHERE user_id = $1
       FOR UPDATE
     `;
     const senderAccRes = await client.query(senderAccQuery, [senderId]);
@@ -175,9 +178,9 @@ const sendToUser = async (req, res) => {
 
     // Fetch receiver account with row-level lock (FOR UPDATE)
     const receiverAccQuery = `
-      SELECT id, balance, is_frozen, currency 
-      FROM accounts 
-      WHERE user_id = $1 
+      SELECT id, balance, is_frozen, currency
+      FROM accounts
+      WHERE user_id = $1
       FOR UPDATE
     `;
     let receiverAccRes = await client.query(receiverAccQuery, [
@@ -209,16 +212,16 @@ const sendToUser = async (req, res) => {
 
     // Deduct from sender
     await client.query(
-      `UPDATE accounts 
-       SET balance = balance - $1, updated_at = NOW() 
+      `UPDATE accounts
+       SET balance = balance - $1, updated_at = NOW()
        WHERE id = $2`,
       [parsedAmount, senderAccount.id],
     );
 
     // Credit to receiver
     await client.query(
-      `UPDATE accounts 
-       SET balance = balance + $1, updated_at = NOW() 
+      `UPDATE accounts
+       SET balance = balance + $1, updated_at = NOW()
        WHERE id = $2`,
       [parsedAmount, receiverAccount.id],
     );
@@ -283,6 +286,7 @@ const sendToUser = async (req, res) => {
           parsedAmount,
           currency,
           note,
+
           error.message || "Internal transfer failure",
         ],
       );
@@ -293,8 +297,11 @@ const sendToUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Payment transfer failed. Please try again. ",
+      TransactionTime : Date.now(),
       error: error.message,
     });
+
+
   } finally {
     client.release();
   }

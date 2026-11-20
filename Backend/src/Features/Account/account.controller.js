@@ -68,11 +68,6 @@ const useGetAccountBalance = async (req, res) => {
   }
 };
 
-/**
- * @API
- * @useFindUserAccount
- * This is Use for Searching People from the Database
- */
 
 /**
  * @API
@@ -91,7 +86,8 @@ const useFindUserAccount = async (req, res) => {
   }
 
   if (!email || email.trim().length < 2) {
-    return res.status(400).json({
+
+    return res.status(401).json({
       success: false,
       message: "Please provide at least 2 characters to search by email",
     });
@@ -129,4 +125,65 @@ const useFindUserAccount = async (req, res) => {
   }
 };
 
-export { useGetAccountBalance, useFindUserAccount };
+/**
+ * @API
+ * @getRecentTrasaction
+ * Query: ?filter=pastWeek | all (defaults to "pastWeek")
+ * The API uses JOINS for ren_users and Transactions table
+*/
+
+const getRecentTrasaction = async (req, res) => {
+  try {
+    const currentUserId = req.user?.user_id;
+    if (!currentUserId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    const account = await ensureUserAccountExists(currentUserId);
+    if (!account) {
+      return res.status(404).json({
+        success: false,
+        message: "User does not exist",
+      });
+    }
+
+    const { filter = "pastWeek" } = req.query;
+
+    const dateFilter =
+      filter === "pastWeek"
+        ? `AND t.created_at >= NOW() - INTERVAL '7 days'`
+        : "";
+
+    const query = `
+      SELECT
+        t.*,
+        sender.name AS sender_name,
+        receiver.name AS receiver_name
+      FROM transactions t
+      LEFT JOIN ren_users sender ON t.sender_id = sender.id
+      LEFT JOIN ren_users receiver ON t.receiver_id = receiver.id
+      WHERE (t.sender_id = $1 OR t.receiver_id = $1)
+      ${dateFilter}
+      ORDER BY t.created_at DESC
+    `;
+
+    const result = await db.query(query, [currentUserId]);
+
+    return res.status(200).json({
+      success: true,
+      message: result.rows.length ? "Transactions fetched" : "No transactions found",
+      data: result.rows,
+    });
+  } catch (error) {
+    console.error("Get Transactions Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export { useGetAccountBalance, useFindUserAccount ,getRecentTrasaction };
