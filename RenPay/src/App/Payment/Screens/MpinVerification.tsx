@@ -6,7 +6,6 @@ import {
   ActivityIndicator,
   StyleSheet,
   Image,
-  Alert,
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -29,7 +28,6 @@ const MpinVerification = () => {
   const navigation = useNavigation<any>();
   const shakeAnimation = useRef(new Animated.Value(0)).current;
 
-  // Extract payment details passed from the Payment screen
   const {
     receiver_id,
     receiver_email,
@@ -45,6 +43,35 @@ const MpinVerification = () => {
   const [isTransferring, setIsTransferring] = useState(false);
 
   const { verifyPin, pinLoading } = useAuth();
+
+  const recipientLabel = receiver_name || receiver_email || `User #${receiver_id}`;
+  const formattedAmount = Number(amount).toLocaleString('en-IN', {
+    minimumFractionDigits: Number(amount) % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2,
+  });
+
+  const navigateToResult = (payload: {
+    paymentSuccess: boolean;
+    message: string;
+    failureReason?: string | null;
+    transferDetail?: any;
+  }) => {
+    navigation.replace('PaymentResult', {
+      paymentSuccess: payload.paymentSuccess,
+      Message: payload.message,
+      failureReason: payload.failureReason ?? null,
+      transferDetail: payload.transferDetail ?? null,
+      recipient: {
+        id: receiver_id,
+        name: receiver_name || null,
+        email: receiver_email || null,
+        avatar: receiver_avatar || null,
+      },
+      amount: Number(amount),
+      note: note || null,
+      idempotency_key,
+    });
+  };
 
   const handlePress = async (val: any) => {
     if (pinLoading || isTransferring) return;
@@ -62,41 +89,55 @@ const MpinVerification = () => {
           // Step 1: Verify MPIN using Auth context
           const res = await verifyPin(TYPED_PIN);
 
-          if (res?.data?.success) {
-            setIsTransferring(true);
-
-            // Step 2: Execute actual money transfer API call
-            const transferRes = await API.post('/payment/send', {
-              receiver_id,
-              receiver_email,
-              amount: Number(amount),
-              currency: 'INR',
-              note: note || null,
-              mpin: TYPED_PIN,
-              idempotency_key,
-            });
-
-            if (transferRes.data.success) {
-              // Navigate to Success screen or go back with success message
-              navigation.replace('Home', {
-                successMessage: `Successfully sent ₹${Number(
-                  amount,
-                ).toLocaleString('en-IN')} to ${receiver_name}!`,
-              });
-            }
-          } else {
+          if (!res?.data?.success) {
             handlePinError();
+            return;
           }
-        } catch (error: any) {
-          console.error('Transfer/Verification Error:', error);
-          // Log the exact message from your backend controller
-          console.log('Backend 400 Error Data:', error.response?.data);
-          console.log('Status Code:', error.response?.status);
 
-          const errorMessage =
-            error.response?.data?.message || 'Transaction failed';
-          Alert.alert('Payment Error', errorMessage); // Optional: show it on screen
-          handlePinError();
+          setIsTransferring(true);
+
+          // Step 2: Execute actual money transfer API call
+          const transferRes = await API.post('/payment/send', {
+            receiver_id,
+            receiver_email,
+            amount: Number(amount),
+            currency: 'INR',
+            note: note || null,
+            mpin: TYPED_PIN,
+            idempotency_key,
+          });
+
+          const apiData = transferRes.data;
+          const isSuccess = Boolean(
+            apiData?.success && apiData?.data?.status !== 'FAILED',
+          );
+
+          navigateToResult({
+            paymentSuccess: isSuccess,
+            message: isSuccess
+              ? `Successfully sent ₹${formattedAmount} to ${recipientLabel}!`
+              : apiData?.message ||
+                `Failed to send ₹${formattedAmount} to ${recipientLabel}!`,
+            failureReason:
+              apiData?.data?.failure_reason ||
+              apiData?.error ||
+              (isSuccess ? null : apiData?.message),
+            transferDetail: apiData,
+          });
+        } catch (error: any) {
+          const backendData = error?.response?.data;
+          const reason =
+            backendData?.message ||
+            backendData?.error ||
+            error?.message ||
+            'Unable to complete transfer. Please try again.';
+
+          navigateToResult({
+            paymentSuccess: false,
+            message: `Failed to send ₹${formattedAmount} to ${recipientLabel}!`,
+            failureReason: reason,
+            transferDetail: backendData ?? null,
+          });
         } finally {
           setIsTransferring(false);
         }
@@ -128,12 +169,9 @@ const MpinVerification = () => {
         </View>
 
         <Text style={styles.payingText}>Paying</Text>
-        <Text style={styles.amountText}>
-          ₹{Number(amount).toLocaleString('en-IN')}
-        </Text>
+        <Text style={styles.amountText}>₹{formattedAmount}</Text>
         <Text style={styles.recipientText}>
-          to{' '}
-          <Text style={styles.boldText}>{receiver_name || receiver_email}</Text>
+          to <Text style={styles.boldText}>{recipientLabel}</Text>
         </Text>
       </View>
 

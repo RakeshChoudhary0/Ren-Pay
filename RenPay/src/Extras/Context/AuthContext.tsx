@@ -34,6 +34,8 @@ interface AuthContextType {
   signUpLoading: boolean;
   FetchAccountDetails: () => Promise<any>;
   accountDetails: any;
+  findUser: (email: string) => Promise<any>
+  FetchTransactions:(filter : string | null) => Promise<any>
 }
 
 GoogleSignin.configure({
@@ -209,6 +211,51 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const findUser = async (email: string) => {
+    try {
+      const trimmed = email.trim();
+      if (!trimmed) {
+        return { success: true, status: 200, message: '', data: [] };
+      }
+      const res = await API.get('/account/search', {
+        params: { email: trimmed },
+      });
+
+      return {
+        success: res?.data?.success ?? true,
+        status: res?.status ?? 200,
+        message: res?.data?.message || '',
+        data: Array.isArray(res?.data?.data) ? res.data.data : [],
+      };
+    } catch (error: any) {
+      const status = error?.response?.status;
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        'Unable to search users';
+
+      // Log expected 400/401 with console.log so LogBox doesn't treat it as a crash
+      console.log('findUser failed:', status, message);
+
+      return {
+        success: false,
+        status,
+        message,
+        data: []
+      };
+    }
+  };
+
+  const FetchTransactions = async (fil: string | null) => {
+    try {
+      const res = await API.get('/account/transaction', { params: { filter: fil } })
+      console.log(res.data.data)
+      return res.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -225,6 +272,8 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         verifyPin,
         FetchAccountDetails,
         accountDetails,
+        findUser,
+        FetchTransactions
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import GoogleOAuth from './Authentication/Screens/GoogleOAuth';
 import { NavigationContainer } from '@react-navigation/native';
@@ -11,6 +11,7 @@ import useAuth from './Extras/Context/AuthContext';
 import Payment from './App/Payment/Screens/Payment';
 import MoreScreen from './App/More/MoreScreen';
 import MpinVerification from './App/Payment/Screens/MpinVerification';
+import PaymentResultScreen from './App/Payment/Screens/PaymentResultScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +52,9 @@ const RootNavigator = () => {
                   component={MpinVerification}
                 />
                 <Stack.Screen name="More" component={MoreScreen} />
+                <Stack.Screen options={{
+                    gestureEnabled: false,
+                  }} name="PaymentResult"  component={PaymentResultScreen} />
               </>
             ) : (
               <Stack.Screen

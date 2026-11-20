@@ -4,53 +4,33 @@ import { ms } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/Feather';
 import { COLORS } from '../../../../Extras/Constants/colors';
 import { useNavigation } from '@react-navigation/native';
-import generateIdempotencyKey from '../../../../Extras/Utils/idempotencyKey';
-import useAuth from '../../../../Extras/Context/AuthContext';
 
-const useData = [
-  {
-    id: '1',
-    name: 'Rakesh',
-    avatar:
-      'https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    email: 'rakesh1154@gmail.com',
-  },
-  {
-    id: '2',
-    name: 'Rakesh Choudhary',
-    avatar:
-      'https://plus.unsplash.com/premium_photo-1664541336896-b3d5f7dec9a3?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    email: '1154@gmail.com',
-  },
-  {
-    id: '3',
-    name: 'Rakesh Sirvi',
-    avatar: '',
-    email: 'rakeshd1154@gmail.com',
-  },
-];
+import {
+  RecentUserItem,
+  useRecentSearches,
+} from '../../../../Extras/LocalStorage/UserStorage';
 
 const SendAgainCard = () => {
-  const { user } = useAuth();
-  const navigation = useNavigation();
+
+  const navigation = useNavigation<any>();
+  const { recentUsers, addRecentUser } = useRecentSearches(6);
+
+  const handlePressUser = (sendToUser: RecentUserItem) => {
+    addRecentUser(sendToUser);
+    navigation.navigate('Payment', { sendToUser });
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.TextHeader}>Send Again</Text>
 
       <View style={styles.profileContainer}>
-        {/* Profile items */}
-        {useData.map(sendToUser => (
+        {recentUsers.map((sendToUser, index) => (
           <TouchableOpacity
-            key={sendToUser.id}
-            onPress={() => {
-              const idempotency_key = generateIdempotencyKey(
-                user.id,
-                sendToUser.id,
-              );
-              navigation.navigate('Payment', { sendToUser, idempotency_key });
-            }}
+            key={`${sendToUser.id ?? sendToUser.email ?? sendToUser.name}-${index}`}
+            onPress={() => handlePressUser(sendToUser)}
             style={styles.avatarWrapper}
-          >
+            activeOpacity={0.75}>
             {sendToUser.avatar ? (
               <Image
                 source={{ uri: sendToUser.avatar }}
@@ -61,13 +41,23 @@ const SendAgainCard = () => {
                 <Icon name="user" size={ms(22)} color={COLORS.Gray} />
               </View>
             )}
+            <Text style={styles.userName} numberOfLines={1}>
+              {sendToUser.name?.split(' ')[0] || 'User'}
+            </Text>
           </TouchableOpacity>
         ))}
 
-        <TouchableOpacity style={styles.avatarWrapper} activeOpacity={0.7}>
+        {/* Add / Search new recipient */}
+        <TouchableOpacity
+          style={styles.avatarWrapper}
+          activeOpacity={0.7}
+          onPress={() => navigation.navigate('Payment')}>
           <View style={styles.avatar}>
             <Icon name="plus" size={ms(24)} color={COLORS.Black} />
           </View>
+          <Text style={styles.userName} numberOfLines={1}>
+            More
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -95,11 +85,13 @@ const styles = StyleSheet.create({
   },
 
   avatarWrapper: {
+    width: ms(72),
     padding: ms(10),
     borderRadius: ms(12),
     backgroundColor: `${COLORS.White}60`,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: ms(5),
   },
 
   avatar: {
@@ -109,6 +101,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: `${COLORS.LevenderGrey}40`,
+  },
+
+  userName: {
+    fontSize: ms(11),
+    fontWeight: '600',
+    color: COLORS.Black,
+    textAlign: 'center',
   },
 });
 

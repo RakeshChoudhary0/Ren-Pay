@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../../../Extras/Constants/colors';
@@ -29,6 +29,7 @@ const Payment = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleProccedToMpinVerification = async () => {
+    setIsLoading(true)
     if (!selectedUser) {
       if (!selectedUser) {
         Alert.alert('Select Recipient', 'Please select a recipient first.');
@@ -52,6 +53,8 @@ const Payment = () => {
     }
 
     const idempotencyKey = generateIdempotencyKey(user.id, selectedUser.id);
+
+    setIsLoading(false)
 
     navigation.navigate('MpinVerification', {
       receiver_id: selectedUser.id,
@@ -84,8 +87,8 @@ const Payment = () => {
           />
         ) : (
           <UserSearchSection
-            onSelectUser={user => {
-              setSelectedUser(user);
+            onSelectUser={usr => {
+              setSelectedUser(usr);
             }}
           />
         )}

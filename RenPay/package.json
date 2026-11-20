@@ -10,7 +10,8 @@
     "test": "jest",
     "ios:pod": "cd ios && pod install && pod update && cd ..",
     "android:gradle": "cd android && ./gradlew clean && cd ..",
-    "clean": "rm -rf node_modules && npm install"
+    "clean": "rm -rf node_modules && npm install",
+    "portForward":"adb reverse tcp:8081 tcp:8081"
   },
   "dependencies": {
     "@react-native-google-signin/google-signin": "^16.1.4",
