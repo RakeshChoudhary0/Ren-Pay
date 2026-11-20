@@ -57,6 +57,7 @@ const Payment = () => {
       receiver_id: selectedUser.id,
       receiver_email: selectedUser.email,
       receiver_name: selectedUser.name,
+      receiver_avatar: selectedUser.avatar,
       amount: amount,
       note: note,
       idempotency_key: idempotencyKey,
@@ -65,7 +66,7 @@ const Payment = () => {
 
   return (
     <SafeAreaView edges={['top']} style={styles.container}>
-      <Header />
+      <Header title="Sent To" />
       <View style={styles.content}>
         {selectedUser ? (
           <PaymentSection

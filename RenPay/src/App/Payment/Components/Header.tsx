@@ -4,8 +4,7 @@ import { ms } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/Entypo';
 import { COLORS } from '../../../Extras/Constants/colors';
 import { useNavigation } from '@react-navigation/native';
-
-const Header = () => {
+const Header = ({ title }: { title: string }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.HeaderContainer}>
@@ -22,7 +21,7 @@ const Header = () => {
       </TouchableOpacity>
 
       <View style={styles.textWrapper} pointerEvents="none">
-        <Text style={styles.text}>Sent To</Text>
+        <Text style={styles.text}>{title}</Text>
       </View>
     </View>
   );

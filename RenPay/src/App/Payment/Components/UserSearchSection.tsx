@@ -14,7 +14,7 @@ import { COLORS } from '../../../Extras/Constants/colors';
 import UserProfile from './SubComponent/UserProfile';
 
 export interface UserItem {
-  id?: string;
+  id?: number | undefined;
   name: string;
   email: string;
   avatar?: string;
@@ -22,36 +22,30 @@ export interface UserItem {
 
 const DEFAULT_USERS: UserItem[] = [
   {
-    id: '1',
-    name: 'Rakesh',
+    id: 3,
+    name: 'Rakesh Sirvi',
     avatar:
       'https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    email: 'rakesh1154@gmail.com',
+    email: 'rakeshsirvi1154@gmail.com',
   },
   {
-    id: '2',
+    id: 2,
     name: 'Rakesh Choudhary',
     avatar:
       'https://plus.unsplash.com/premium_photo-1664541336896-b3d5f7dec9a3?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    email: '1154@gmail.com',
+    email: 'rakeshchoudhary1154@gmail.com',
   },
   {
-    id: '3',
+    id: 3,
     name: 'Rakesh Sirvi',
     avatar: '',
     email: 'rakeshd1154@gmail.com',
   },
   {
-    id: '4',
+    id: 4,
     name: 'Priya Sharma',
     avatar: '',
     email: 'priya.sharma@example.com',
-  },
-  {
-    id: '5',
-    name: 'Aman Verma',
-    avatar: '',
-    email: 'aman.verma@example.com',
   },
 ];
 
@@ -97,7 +91,7 @@ const UserSearchSection = ({ onSelectUser }: UserSearchSectionProps) => {
 
       <FlatList
         data={filteredUsers}
-        keyExtractor={item => item.id || item.email}
+        keyExtractor={item => item.email}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
         keyboardShouldPersistTaps="handled"
