@@ -32,6 +32,7 @@ const MiddleSection = () => {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
+          onPress={() => { navigation.navigate('QR',)}}
           style={[styles.Button, { backgroundColor: COLORS.LevenderGrey }]}
         >
           <MaterialIcon

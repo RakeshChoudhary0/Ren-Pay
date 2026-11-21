@@ -50,7 +50,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const [authenticated, setAuthenticated] = useState<boolean>(true);
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<any>(() => getUserMMKv());
   const [loading, setLoading] = useState<boolean>(true);
   const [pinLoading, setPinLoading] = useState<boolean>(false);

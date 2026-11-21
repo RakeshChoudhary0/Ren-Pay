@@ -5,7 +5,7 @@
 //  Created by Rakesh Choudhary on 29/09/26.
 //
 
-import UIKit
+import UIKit;
 import React
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -24,16 +24,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let window = UIWindow(windowScene: windowScene)
 
     // Automatically initializes rootViewController inside window
+    var launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    if let url = connectionOptions.urlContexts.first?.url {
+          launchOptions = [.url: url]
+    }
+
     factory.startReactNative(
       withModuleName: "RenPay",
       in: window,
-      launchOptions: nil
+      launchOptions:launchOptions
     )
-    
+
 
     self.window = window
     window.makeKeyAndVisible()
+
   }
+
+  func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+      guard let url = URLContexts.first?.url else { return }
+      _ = RCTLinkingManager.application(
+        UIApplication.shared,
+        open: url,
+        options: [:]
+      )
+    }
+
+
 
   func sceneDidBecomeActive(_ scene: UIScene) {}
   func sceneWillResignActive(_ scene: UIScene) {}

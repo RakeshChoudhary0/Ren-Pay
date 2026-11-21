@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import BottomSectionDesignBubble from './SubComponent/BottomSectionDesignBubble';
 import { ms } from 'react-native-size-matters';
@@ -28,13 +28,13 @@ export interface TransactionType {
   updated_at: string;
 }
 
-type FilterType = 'pastWeek' | 'all';
+
 
 const BottomSection = () => {
   const { FetchTransactions } = useAuth();
 
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
-  const [filter, setFilter] = useState<FilterType>('pastWeek');
+
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useAuth();
 
@@ -45,7 +45,7 @@ const BottomSection = () => {
       try {
         setLoading(true);
         // Fetch "all" once (or pass `filter` if your backend filters it)
-        const res = await FetchTransactions('all');
+        const res = await FetchTransactions('pastWeek');
         const list: TransactionType[] = Array.isArray(res?.data)
           ? res.data
           : Array.isArray(res)
@@ -71,18 +71,6 @@ const BottomSection = () => {
     };
   }, [FetchTransactions]);
 
-  const visibleTransactions = useMemo(() => {
-    if (filter === 'all') {
-      return transactions;
-    }
-
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-    return transactions.filter(
-      (item) => new Date(item.created_at) >= sevenDaysAgo
-    );
-  }, [transactions, filter]);
 
   return (
     <View style={styles.container}>
@@ -110,9 +98,9 @@ const BottomSection = () => {
           <View style={styles.emptyRecent}>
             <Text style={styles.emptyText}>Loading transactions...</Text>
           </View>
-        ) : visibleTransactions.length > 0 ? (
+        ) : transactions.length > 0 ? (
           <View style={styles.scroll}>
-            {visibleTransactions.map((tx) => (
+            {transactions.map((tx) => (
               <RecentTrancationCard key={tx.txn_id} tx={tx} userId={user.id} />
             ))}
           </View>

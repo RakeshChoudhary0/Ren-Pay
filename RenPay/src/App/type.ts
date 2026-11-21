@@ -10,14 +10,16 @@ export interface UserItem {
 
 // 2. Define all routes and their params
 export type RootStackParamList = {
-  AuthPage: undefined;
-  TermsAndConditions: undefined;
-  MpinRegistration: undefined;
-  PasswordValidator: undefined;
-  Home: undefined;
-  Payment: { sendToUser: UserItem; idempotency_key: string };
-  More: undefined;
-  MpinVerification: any;
+    Home: undefined;
+    Payment: UserItem;
+    MpinVerification: undefined;
+    More: undefined;
+    PaymentResult: undefined;
+    PasswordValidator: { pendingReceiver?: UserItem } | undefined;
+    MpinRegistration: undefined;
+    AuthPage: undefined;
+    TermsAndConditions: undefined;
+    QR: undefined;
 };
 
 declare global {

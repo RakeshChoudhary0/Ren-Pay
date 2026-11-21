@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Animated,
@@ -16,7 +16,7 @@ import { triggerShake } from '../../Extras/Utils/ShakeAnimation';
 
 const PIN_LENGTH = 6;
 
-const PasswordValidator = ({ navigation }: { navigation: any }) => {
+const PasswordValidator = () => {
   const [pin, setPin] = useState<number[]>([]);
   const [invalidIndicator, setInvalidIndicator] = useState(false);
 
@@ -24,6 +24,7 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
 
   //  Animated Wrong Indicator
   const shakeAnimation = useRef(new Animated.Value(0)).current;
+
 
   const handlePress = async (val: any) => {
     if (pinLoading) return;
@@ -49,8 +50,9 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
               setInvalidIndicator(false);
             }, 200);
           }
-        } catch (error) {
+        } catch (e) {
           setInvalidIndicator(true);
+          console.log(e)
           triggerShake(shakeAnimation);
           setTimeout(() => {
             setPin([]);
@@ -60,6 +62,13 @@ const PasswordValidator = ({ navigation }: { navigation: any }) => {
       }
     }
   };
+
+  useEffect(() => {
+    return () => {
+      shakeAnimation.stopAnimation();
+      shakeAnimation.removeAllListeners();
+    };
+  }, [shakeAnimation]);
 
   return (
     <View style={styles.container}>

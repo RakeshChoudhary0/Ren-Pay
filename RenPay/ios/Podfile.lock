@@ -1872,7 +1872,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNSVG (15.15.5):
+  - RNSVG (15.16.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1893,9 +1893,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-    - RNSVG/common (= 15.15.5)
+    - RNSVG/common (= 15.16.1)
     - Yoga
-  - RNSVG/common (15.15.5):
+  - RNSVG/common (15.16.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2249,7 +2249,7 @@ EXTERNAL SOURCES:
     :path: build/rncore-facades/Yoga
 
 SPEC CHECKSUMS:
-  AppAuth: ef4da5a3fc2e10b90c09a0a94a9baeaedc0341d5
+  AppAuth: 3a08d0739dfbebc98104f5baa69d23201122bfd9
   AppCheckCore: be8fce5469f68d7f6a29aa94b25f097409ff7fdc
   boost: 8502bfdc46e2804408af2e163049ece181009af4
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
@@ -2258,9 +2258,9 @@ SPEC CHECKSUMS:
   FBLazyVector: 732df79fea96f10cc14477969cea05707026d2fd
   fmt: ba0886e864ebb21d14c98b2e12e164b8002f5b93
   glog: 3cf7cb46f743c4bc758ae3e6d9c15bd1b4cfd6d4
-  GoogleSignIn: e449a40a92e9f2eea56e98b5214d13725dc5a00a
+  GoogleSignIn: 476a90b19668644a619caf79bd373f9f75a783ac
   GoogleUtilities: 7dc09b3fa9ecb5c2298b952313d14628b61b9da3
-  GTMAppAuth: 217a876b249c3c585a54fd6f73e6b58c4f5c4238
+  GTMAppAuth: 9566e1a3451fd6967b58188fa15286fb6ae7914f
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   hermes-engine: 6a26e94b4a974cbadc751eed9caa12624c38f226
   MMKVCore: 3d16ce9f7d411e135020915fde98a056859a1efa
@@ -2350,7 +2350,7 @@ SPEC CHECKSUMS:
   RNKeychain: 551d42b0ef53426f82551a0cc961cfa10ad33afa
   RNReactNativeHapticFeedback: 7f0e5435fa5153de77f2e61796cbbba5eb131a87
   RNScreens: a2103f13fa603c405092daf70ca4eb3a6291fd6d
-  RNSVG: 6c9bcbf53822153be6f6c1484f6b0b57c0040d21
+  RNSVG: b63b54506f92434f6c62b34b17458e521fa47ea9
   RNVectorIcons: 4f353aed7dde2ecfc77da4130afce046d147ae8a
   SocketRocket: 37aec555668fb852ec12e3c0de59a86ca58f0871
   Yoga: d1c536142c5ff8ec8cd856ab2a7c227a1d875c8e

@@ -35,7 +35,7 @@ export const clearUserStorage = () => {
 
 
 export interface RecentUserItem {
-  id?: number | string;
+  id?:  string;
   name: string;
   email: string;
   avatar?: string;

@@ -9,7 +9,7 @@ import SearchStatusBanner from './SubComponent/SearchStatusBanner';
 import SearchResultsList from './SubComponent/SearchResultsList';
 
 export interface UserItem {
-  id?: number | string;
+  id?:  string;
   name: string;
   email: string;
   avatar?: string;

@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../../../Extras/Constants/colors';
@@ -7,39 +7,80 @@ import Header from '../Components/Header';
 import PaymentSection from '../Components/PaymentSection';
 import UserSearchSection, { UserItem } from '../Components/UserSearchSection';
 import useAuth from '../../../Extras/Context/AuthContext';
-
 import generateIdempotencyKey from '../../../Extras/Utils/idempotencyKey';
+
+interface PaymentRouteParams {
+  id?: string | number;
+  name?: string;
+  email?: string;
+  avatar?: string;
+  sendToUser?: UserItem;
+  idempotency_key?: string;
+}
+
+const extractUserFromParams = (
+  params: PaymentRouteParams | undefined,
+): UserItem | null => {
+  if (!params) return null;
+
+  if (params.sendToUser) {
+    return params.sendToUser;
+  }
+
+  const email = typeof params.email === 'string' ? params.email.trim() : '';
+  const id = params.id != null ? String(params.id).trim() : '';
+  const rawName = typeof params.name === 'string' ? params.name.trim() : '';
+  const avatar = typeof params.avatar === 'string' ? params.avatar.trim() : '';
+
+  if (!id && !email && !rawName) {
+    return null;
+  }
+
+  return {
+    id,
+    name: rawName || (email ? email.split('@')[0] : 'Receiver'),
+    email,
+    avatar,
+  } as UserItem;
+};
 
 const Payment = () => {
   const route = useRoute();
   const navigation = useNavigation<any>();
-  const { accountDetails } = useAuth();
-  const userBalance = accountDetails?.balance || 0;
-  const { user } = useAuth();
+  const { accountDetails, user } = useAuth();
+  const userBalance = accountDetails?.balance || '0';
 
-  const params =
-    (route.params as { sendToUser?: UserItem; idempotency_key?: string }) || {};
+  const routeParams = route.params as PaymentRouteParams | undefined;
 
-  const [selectedUser, setSelectedUser] = useState<UserItem | any>(
-    params.sendToUser || null,
+  const resolvedUser = useMemo(
+    () => extractUserFromParams(routeParams),
+    [routeParams],
   );
 
+  const [selectedUser, setSelectedUser] = useState<UserItem | null>(
+    resolvedUser,
+  );
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    if (resolvedUser) {
+      setSelectedUser(resolvedUser);
+    }
+  }, [resolvedUser]);
+
   const handleProccedToMpinVerification = async () => {
-    setIsLoading(true)
+    if (isLoading) return;
+
     if (!selectedUser) {
-      if (!selectedUser) {
-        Alert.alert('Select Recipient', 'Please select a recipient first.');
-        return;
-      }
+      Alert.alert('Select Recipient', 'Please select a recipient first.');
+      return;
     }
 
     const parsedAmount = Number(amount);
 
-    if (!amount || isNaN(parsedAmount) || parsedAmount <= 0) {
+    if (!amount || Number.isNaN(parsedAmount) || parsedAmount <= 0) {
       Alert.alert(
         'Invalid Amount',
         'Please enter a valid amount greater than 0.',
@@ -47,24 +88,35 @@ const Payment = () => {
       return;
     }
 
-    if (parsedAmount > Number(userBalance)) {
+    if (parsedAmount > userBalance) {
       Alert.alert('Insufficient Balance', 'You do not have enough funds.');
       return;
     }
 
-    const idempotencyKey = generateIdempotencyKey(user.id, selectedUser.id);
+    if (!user?.id) {
+      Alert.alert('Session Error', 'Unable to verify sender account.');
+      return;
+    }
 
-    setIsLoading(false)
+    setIsLoading(true);
+    try {
+      const idempotencyKey = generateIdempotencyKey(
+        String(user.id),
+        String(selectedUser.id),
+      );
 
-    navigation.navigate('MpinVerification', {
-      receiver_id: selectedUser.id,
-      receiver_email: selectedUser.email,
-      receiver_name: selectedUser.name,
-      receiver_avatar: selectedUser.avatar,
-      amount: amount,
-      note: note,
-      idempotency_key: idempotencyKey,
-    });
+      navigation.navigate('MpinVerification', {
+        receiver_id: selectedUser.id,
+        receiver_email: selectedUser.email,
+        receiver_name: selectedUser.name,
+        receiver_avatar: selectedUser.avatar,
+        amount,
+        note,
+        idempotency_key: idempotencyKey,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -83,11 +135,12 @@ const Payment = () => {
             onChangeUser={() => {
               setSelectedUser(null);
               setAmount('');
+              setNote('');
             }}
           />
         ) : (
           <UserSearchSection
-            onSelectUser={usr => {
+            onSelectUser={(usr: UserItem) => {
               setSelectedUser(usr);
             }}
           />
