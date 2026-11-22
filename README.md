@@ -10,39 +10,44 @@ Built with **React Native (v0.87)**, **TypeScript**, and a **Node.js/Express + P
 
 The application features a sleek dark fintech design system tailored for responsive performance across iOS and Android devices.
 
-| Home Dashboard | Recipient Search / Pay | Swipe Payment |
-| :---: | :---: | :---: |
+|              Home Dashboard              |               Recipient Search / Pay               |                 Swipe Payment                 |
+| :--------------------------------------: | :------------------------------------------------: | :-------------------------------------------: |
 | ![Home Screen](./ProjectImages/Home.png) | ![Payment Recipient](./ProjectImages/Payment1.png) | ![Swipe to Pay](./ProjectImages/Payment2.png) |
 
-| Personal QR Code | Real-time QR Scanner |
-| :---: | :---: |
-| ![My QR Code](./ProjectImages/BarCode.png) | ![QR Scanner](./ProjectImages/QRScanner.png) |
+|              Personal QR Code              |             Real-time QR Scanner             |                 Success Screen                 |
+| :----------------------------------------: | :------------------------------------------: | :--------------------------------------------: |
+| ![My QR Code](./ProjectImages/BarCode.png) | ![QR Scanner](./ProjectImages/QRScanner.png) | ![Success Screen](./ProjectImages/Success.png) |
 
 ---
 
 ## 🚀 Key Features
 
 ### 1. 🔐 Robust Authentication & Security
+
 - **Google OAuth 2.0 Integration**: Fast sign-in powered by `@react-native-google-signin/google-signin` and validated via Google Auth Library on the backend.
 - **Bi-Level Session Management**: Access tokens (JWT, short-lived) and Refresh tokens (stored in PostgreSQL).
 - **Encrypted Local Storage**: Sensitive tokens stored via `react-native-keychain` and fast local cache using `react-native-mmkv`.
 - **6-Digit MPIN Validation**: Custom numeric pin validation with shake animation feedback (`Animated` API), haptics, and `bcrypt` password hashing on the server.
 
 ### 2. 💸 Simulated P2P Transactions & Atomic Transfers
+
 - **ACID-Compliant PostgreSQL Transactions**: Transfers use PostgreSQL row locks (`SELECT ... FOR UPDATE`) to prevent double-spending or race conditions.
 - **Idempotency Protection**: Every transaction creates and tracks a unique `idempotency_key` ensuring duplicate requests never execute twice.
 - **Dynamic Keypad & Real-Time Balance Validation**: Built-in 3x4 keypad with currency formatting (INR ₹), 2-decimal precision limits, and live balance deficit warnings.
 - **Interactive "Swipe-to-Pay" Knob**: Gesture-driven confirmation built with React Native's `PanResponder`, animated translation, and haptic feedback.
 
 ### 3. 📷 QR Code Generation & Scanning
+
 - **Custom QR Generator**: Generates personal static and dynamic UPI/P2P QR codes using `react-native-qrcode-svg`.
 - **Real-Time Camera Scanner**: Powered by `react-native-camera-kit` to scan recipient QR codes and auto-fill transfer targets instantly.
 
 ### 4. 📊 Analytics & Wallet Insights
+
 - **Interactive Charts**: Financial metrics visualized using `react-native-gifted-charts`.
 - **Recent Activity Ledger**: Transaction timeline tracking credits, debits, failure reasons, and timestamps.
 
-### 5. 🔔 Push Notifications *(Upcoming Feature)*
+### 5. 🔔 Push Notifications _(Upcoming Feature)_
+
 - **Firebase Cloud Messaging (FCM)**: Integration planned for immediate transaction alerts, credit/debit notifications, and login security alerts.
 
 ---
@@ -50,6 +55,7 @@ The application features a sleek dark fintech design system tailored for respons
 ## 🛠️ Architecture & Tech Stack
 
 ### Frontend (`/RenPay`)
+
 - **Framework**: React Native 0.87 (React 19, New Architecture ready)
 - **Language**: TypeScript 6.0
 - **Navigation**: React Navigation (Native Stack v7)
@@ -59,6 +65,7 @@ The application features a sleek dark fintech design system tailored for respons
 - **Hardware Interop**: `react-native-camera-kit` (QR Scanner)
 
 ### Backend (`/Backend`)
+
 - **Runtime**: Node.js (ES Modules)
 - **Framework**: Express 5.x
 - **Database**: PostgreSQL (`pg` pool)
@@ -103,6 +110,7 @@ Ren-Pay/
 ## ⚡ Getting Started
 
 ### 1. Backend Setup
+
 1. Navigate to the backend directory:
    ```bash
    cd Backend
@@ -123,6 +131,7 @@ Ren-Pay/
    ```
 
 ### 2. Mobile App Setup
+
 1. Navigate to the mobile app directory:
    ```bash
    cd RenPay
