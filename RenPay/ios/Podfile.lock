@@ -72,7 +72,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - NitroModules (0.37.0):
+  - NitroModules (0.37.2):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1756,6 +1756,28 @@ PODS:
     - React-perflogger (= 0.87.0)
     - React-utils (= 0.87.0)
     - ReactNativeDependencies
+  - ReactNativeCameraKit (18.0.1):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-bridging
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - ReactNativeDependencies (0.87.0)
   - RecaptchaInterop (101.0.0)
   - RNGoogleSignin (16.1.4):
@@ -2032,6 +2054,7 @@ DEPENDENCIES:
   - ReactAppDependencyProvider (from `build/generated/ios/ReactAppDependencyProvider`)
   - ReactCodegen (from `build/generated/ios/ReactCodegen`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeCameraKit (from `../node_modules/react-native-camera-kit`)
   - ReactNativeDependencies (from `../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNKeychain (from `../node_modules/react-native-keychain`)
@@ -2229,6 +2252,8 @@ EXTERNAL SOURCES:
     :path: build/generated/ios/ReactCodegen
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeCameraKit:
+    :path: "../node_modules/react-native-camera-kit"
   ReactNativeDependencies:
     :podspec: "../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec"
   RNGoogleSignin:
@@ -2265,7 +2290,7 @@ SPEC CHECKSUMS:
   hermes-engine: 6a26e94b4a974cbadc751eed9caa12624c38f226
   MMKVCore: 3d16ce9f7d411e135020915fde98a056859a1efa
   NitroMmkv: df3ae7b9ee6c9bae4ac5439994fa213e71c72ef0
-  NitroModules: b878677ec4c260bd821ed4a66703979538705f2e
+  NitroModules: 93e460d17dae9f4e2bbd4155e6c73530d188d458
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
   PromisesSwift: 217dea0fd5d2ad65222a109c48698add13cc1c5b
   RCT-Folly: 82921e585c0400eda46fac1068297aa9dfb035e4
@@ -2344,6 +2369,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: ed5609dc8e30eeade35ba8e43128781ee8fdf4de
   ReactCodegen: dca6757feb1e977c5cf6708872d7fe48b5a45528
   ReactCommon: 5f5a302748322015f2e3334869cdd9b4d0395846
+  ReactNativeCameraKit: 0ea2cbbc379912ecb937befda4f802f8d98fe129
   ReactNativeDependencies: ec5530432d8191b38e278117d498aaff05ea9d6f
   RecaptchaInterop: 11e0b637842dfb48308d242afc3f448062325aba
   RNGoogleSignin: ac755be54b6da943c23d8e48cc0b7e7e155df2d0

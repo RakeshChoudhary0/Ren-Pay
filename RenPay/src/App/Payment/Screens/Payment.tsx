@@ -9,6 +9,7 @@ import UserSearchSection, { UserItem } from '../Components/UserSearchSection';
 import useAuth from '../../../Extras/Context/AuthContext';
 import generateIdempotencyKey from '../../../Extras/Utils/idempotencyKey';
 
+
 interface PaymentRouteParams {
   id?: string | number;
   name?: string;
@@ -121,7 +122,7 @@ const Payment = () => {
 
   return (
     <SafeAreaView edges={['top']} style={styles.container}>
-      <Header title="Sent To" />
+      <Header title="Sent To" horizontalPadding={20}  />
       <View style={styles.content}>
         {selectedUser ? (
           <PaymentSection

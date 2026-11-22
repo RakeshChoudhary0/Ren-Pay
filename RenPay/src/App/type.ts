@@ -8,11 +8,14 @@ export interface UserItem {
   email: string;
 }
 
+
+
+
 // 2. Define all routes and their params
 export type RootStackParamList = {
     Home: undefined;
     Payment: UserItem;
-    MpinVerification: undefined;
+    MpinVerification: any;
     More: undefined;
     PaymentResult: undefined;
     PasswordValidator: { pendingReceiver?: UserItem } | undefined;

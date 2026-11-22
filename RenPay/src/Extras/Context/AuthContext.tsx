@@ -13,6 +13,7 @@ import {
   setUserMMKv,
   clearUserStorage,
 } from '../LocalStorage/UserStorage';
+
 import API from '../API/api';
 import { deleteToken, getToken, saveToken } from '../LocalStorage/keyStore';
 import { createMMKV } from 'react-native-mmkv';
@@ -50,7 +51,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const [authenticated, setAuthenticated] = useState<boolean>(true);
   const [user, setUser] = useState<any>(() => getUserMMKv());
   const [loading, setLoading] = useState<boolean>(true);
   const [pinLoading, setPinLoading] = useState<boolean>(false);
