@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Button,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -20,7 +18,6 @@ const GoogleOAuth = ({ navigation }: { navigation: any }) => {
   const HandleGoogleLogin = async () => {
     try {
       const res = await googleAuthentication();
-      const userMpin = res.data.data.mpin;
       console.log('the user is ', res.data.data);
     } catch (error) {
       console.log('error', error);
@@ -36,6 +33,7 @@ const GoogleOAuth = ({ navigation }: { navigation: any }) => {
         <Text style={styles.centerText}>REN</Text>
         <Text style={styles.centerDiscriptionText}>
           Makes The Payment Easier
+
         </Text>
       </View>
       <View style={styles.googleLoginButton}>

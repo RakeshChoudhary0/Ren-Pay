@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "555093687470",
+    "project_id": "project-renpay",
+    "storage_bucket": "project-renpay.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555093687470:android:431beb43ae160fe4e1013f",
+        "android_client_info": {
+          "package_name": "com.renpay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUTD4VINl5Ss_6T2nLUwsP8pIhRVQvu0w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
