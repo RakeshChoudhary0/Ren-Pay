@@ -2,10 +2,12 @@ import { PermissionsAndroid } from 'react-native';
 
 import {
   getMessaging,
+  onMessage,
   onRegistered,
   register,
 } from '@react-native-firebase/messaging';
 import { useEffect } from 'react';
+import { displayNotification } from './displayNotification';
 
 const requestUserPermission = async () => {
   const granted = await PermissionsAndroid.request(
@@ -37,5 +39,15 @@ export const useNotification = () => {
   useEffect(() => {
     requestUserPermission();
     getToken();
+
+    const messaging = getMessaging();
+    const unsubscribeOnMessage = onMessage(messaging, async remoteMessage => {
+      console.log('Foreground message received:', remoteMessage);
+      await displayNotification(remoteMessage);
+    });
+
+    return () => {
+      unsubscribeOnMessage();
+    };
   }, []);
 };

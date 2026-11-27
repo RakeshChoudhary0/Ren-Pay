@@ -8,9 +8,11 @@ import {
   getMessaging,
   setBackgroundMessageHandler,
 } from '@react-native-firebase/messaging';
+import { displayNotification } from './Extras/Hook/displayNotification';
 const messaging = getMessaging();
 setBackgroundMessageHandler(messaging, async remoteMessage => {
   console.log('Message handled in the background!', remoteMessage);
+  await displayNotification(remoteMessage);
 });
 
 LogBox.ignoreLogs(['Attempted to import the module']);
